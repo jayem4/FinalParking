@@ -290,10 +290,9 @@ public class U_Admin extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         account_table = new javax.swing.JTable();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jEditorPane1 = new javax.swing.JEditorPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         Main.setBackground(new java.awt.Color(0, 102, 102));
         Main.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -306,11 +305,11 @@ public class U_Admin extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Admin Dashboard");
-        Header.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 1310, 40));
+        Header.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-220, 20, 1310, 40));
 
-        Main.add(Header, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1320, 100));
+        Main.add(Header, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 890, 100));
 
-        Navigation.setBackground(new java.awt.Color(102, 102, 102));
+        Navigation.setBackground(new java.awt.Color(0, 153, 153));
         Navigation.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         logout.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -331,7 +330,7 @@ public class U_Admin extends javax.swing.JFrame {
         jLabel10.setText("Back");
         logout.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 11, 130, -1));
 
-        Navigation.add(logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 493, 130, 40));
+        Navigation.add(logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 240, 130, 40));
 
         add.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -352,7 +351,7 @@ public class U_Admin extends javax.swing.JFrame {
         add.add(jLabel13);
         jLabel13.setBounds(75, 10, 130, 22);
 
-        Navigation.add(add, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 190, 300, 40));
+        Navigation.add(add, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 300, 40));
 
         update.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -373,7 +372,7 @@ public class U_Admin extends javax.swing.JFrame {
         update.add(jLabel14);
         jLabel14.setBounds(100, 10, 80, 20);
 
-        Navigation.add(update, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 250, 300, 40));
+        Navigation.add(update, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 90, 300, 40));
 
         delete.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -394,7 +393,7 @@ public class U_Admin extends javax.swing.JFrame {
         delete.add(jLabel11);
         jLabel11.setBounds(100, 10, 80, 22);
 
-        Navigation.add(delete, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 320, 300, 40));
+        Navigation.add(delete, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 160, 300, 40));
         Navigation.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, -80, 380, 220));
 
         Main.add(Navigation, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 100, 300, 540));
@@ -409,22 +408,9 @@ public class U_Admin extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(account_table);
 
-        Main.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 210, 1020, 430));
+        Main.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 100, 1020, 430));
 
-        jScrollPane2.setViewportView(jEditorPane1);
-
-        Main.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 290, -1, -1));
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Main, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Main, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        getContentPane().add(Main, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -587,7 +573,6 @@ public class U_Admin extends javax.swing.JFrame {
     private javax.swing.JTable account_table;
     private javax.swing.JPanel add;
     private javax.swing.JPanel delete;
-    private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -595,7 +580,6 @@ public class U_Admin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPanel logout;
     private javax.swing.JPanel update;
     // End of variables declaration//GEN-END:variables

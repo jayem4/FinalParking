@@ -80,10 +80,6 @@ public class Admin_ChangePass extends javax.swing.JFrame {
         Main = new javax.swing.JPanel();
         Header = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        Navigation = new javax.swing.JPanel();
-        logout = new javax.swing.JPanel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         Cpassword = new javax.swing.JPasswordField();
@@ -95,8 +91,12 @@ public class Admin_ChangePass extends javax.swing.JFrame {
         check1 = new javax.swing.JCheckBox();
         check2 = new javax.swing.JCheckBox();
         check3 = new javax.swing.JCheckBox();
+        logout = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         Main.setBackground(new java.awt.Color(0, 102, 102));
         Main.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -109,47 +109,21 @@ public class Admin_ChangePass extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Change Password");
-        Header.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 1310, 40));
+        Header.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-210, 30, 1310, 40));
 
         Main.add(Header, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1320, 100));
-
-        Navigation.setBackground(new java.awt.Color(102, 102, 102));
-        Navigation.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        logout.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                logoutMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                logoutMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                logoutMouseExited(evt);
-            }
-        });
-        logout.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel10.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel10.setText("Back");
-        logout.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 11, 130, -1));
-
-        Navigation.add(logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 520, 130, 40));
-        Navigation.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-70, -40, 380, 430));
-
-        Main.add(Navigation, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 100, 310, 560));
 
         jLabel4.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("Enter New Pass:");
-        Main.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 300, 120, 30));
+        Main.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 160, 120, 30));
 
         jLabel5.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("Confirm Password:");
-        Main.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 350, 140, 30));
+        Main.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 210, 140, 30));
 
         Cpassword.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         Cpassword.addActionListener(new java.awt.event.ActionListener() {
@@ -157,7 +131,7 @@ public class Admin_ChangePass extends javax.swing.JFrame {
                 CpasswordActionPerformed(evt);
             }
         });
-        Main.add(Cpassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 350, 330, 30));
+        Main.add(Cpassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 210, 330, 30));
 
         oldPassword.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         oldPassword.addActionListener(new java.awt.event.ActionListener() {
@@ -165,13 +139,13 @@ public class Admin_ChangePass extends javax.swing.JFrame {
                 oldPasswordActionPerformed(evt);
             }
         });
-        Main.add(oldPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 250, 330, 30));
+        Main.add(oldPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 110, 330, 30));
 
         jLabel8.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel8.setText("Enter Old Pass:");
-        Main.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 250, 130, 30));
+        Main.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 110, 130, 30));
 
         confirm.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -192,7 +166,7 @@ public class Admin_ChangePass extends javax.swing.JFrame {
         confirm.add(jLabel11);
         jLabel11.setBounds(0, 7, 90, 17);
 
-        Main.add(confirm, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 430, 90, 30));
+        Main.add(confirm, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 250, 90, 30));
 
         newPassword.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         newPassword.addActionListener(new java.awt.event.ActionListener() {
@@ -200,7 +174,7 @@ public class Admin_ChangePass extends javax.swing.JFrame {
                 newPasswordActionPerformed(evt);
             }
         });
-        Main.add(newPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 300, 330, 30));
+        Main.add(newPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 160, 330, 30));
 
         check1.setBackground(new java.awt.Color(102, 102, 102));
         check1.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
@@ -211,7 +185,7 @@ public class Admin_ChangePass extends javax.swing.JFrame {
                 check1ActionPerformed(evt);
             }
         });
-        Main.add(check1, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 250, -1, -1));
+        Main.add(check1, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 110, -1, -1));
 
         check2.setBackground(new java.awt.Color(102, 102, 102));
         check2.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
@@ -222,7 +196,7 @@ public class Admin_ChangePass extends javax.swing.JFrame {
                 check2ActionPerformed(evt);
             }
         });
-        Main.add(check2, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 300, -1, -1));
+        Main.add(check2, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 160, -1, -1));
 
         check3.setBackground(new java.awt.Color(102, 102, 102));
         check3.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
@@ -233,18 +207,32 @@ public class Admin_ChangePass extends javax.swing.JFrame {
                 check3ActionPerformed(evt);
             }
         });
-        Main.add(check3, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 350, -1, -1));
+        Main.add(check3, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 210, -1, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Main, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Main, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        logout.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                logoutMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                logoutMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                logoutMouseExited(evt);
+            }
+        });
+        logout.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel10.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel10.setText("Back");
+        logout.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 11, 130, -1));
+
+        Main.add(logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 250, -1, 40));
+
+        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\Gwapo ko\\Downloads\\cla22.jpg")); // NOI18N
+        Main.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, 310, 420));
+
+        getContentPane().add(Main, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 870, 383));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -446,7 +434,6 @@ public class Admin_ChangePass extends javax.swing.JFrame {
     private javax.swing.JPasswordField Cpassword;
     private javax.swing.JPanel Header;
     private javax.swing.JPanel Main;
-    private javax.swing.JPanel Navigation;
     private javax.swing.JCheckBox check1;
     private javax.swing.JCheckBox check2;
     private javax.swing.JCheckBox check3;

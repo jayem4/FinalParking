@@ -143,13 +143,16 @@ public class ParkingTransaction extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         mm = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        pay = new javax.swing.JTextField();
-        typvehi = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
         yy = new javax.swing.JComboBox<>();
         jLabel8 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        typvehi = new javax.swing.JComboBox<>();
+        pay = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -158,22 +161,22 @@ public class ParkingTransaction extends javax.swing.JFrame {
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         hh.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12" }));
-        jPanel1.add(hh, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 210, 50, -1));
+        jPanel1.add(hh, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 200, 50, -1));
 
         minu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "45", "46", "47", "48", "49", "50", " " }));
-        jPanel1.add(minu, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 210, 50, -1));
+        jPanel1.add(minu, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 200, 50, -1));
 
         pm.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "AM", "PM" }));
-        jPanel1.add(pm, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 210, -1, -1));
+        jPanel1.add(pm, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 200, -1, -1));
 
         jLabel9.setText("Hours");
-        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 190, 50, -1));
+        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 180, 50, -1));
 
         jLabel10.setText("Minutes");
-        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 190, -1, -1));
+        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 180, -1, -1));
 
         jLabel11.setText("Pm");
-        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 190, 30, -1));
+        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 180, 30, -1));
 
         dd.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" }));
         jPanel1.add(dd, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, 40, -1));
@@ -187,29 +190,41 @@ public class ParkingTransaction extends javax.swing.JFrame {
         jLabel7.setText("Month");
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 180, -1, -1));
 
-        jLabel1.setText("Type of Vehicle :");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
-
-        jLabel2.setText("Payment ");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 30, -1, -1));
-        jPanel1.add(pay, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 50, 160, 30));
-
-        typvehi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Car", "Motorcyle", " " }));
-        jPanel1.add(typvehi, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 52, 150, 30));
-
         jButton1.setText("Confirm");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton1MouseClicked(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 270, -1, -1));
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 240, -1, -1));
 
         yy.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2023", "2024", "2025", " " }));
         jPanel1.add(yy, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 200, 80, -1));
 
         jLabel8.setText("Year");
         jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 180, -1, -1));
+
+        jPanel2.setBackground(new java.awt.Color(153, 255, 204));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
+        jLabel3.setText("PARKING TRANSACTION");
+        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 10, 320, 40));
+
+        jLabel1.setText("Type of Vehicle :");
+        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, -1, -1));
+
+        typvehi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Car", "Motorcyle", " " }));
+        jPanel2.add(typvehi, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, 150, 30));
+        jPanel2.add(pay, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 110, 160, 30));
+
+        jLabel2.setText("Payment ");
+        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 90, -1, -1));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 510, 410));
+
+        jPanel4.setBackground(new java.awt.Color(102, 255, 204));
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 0, 120, 410));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 630, 410));
 
@@ -264,11 +279,14 @@ public class ParkingTransaction extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JComboBox<String> minu;
     private javax.swing.JComboBox<String> mm;
     private javax.swing.JTextField pay;

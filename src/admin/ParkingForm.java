@@ -166,20 +166,22 @@ private void loadParkingTransactionsData() {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        tblparking.setBackground(new java.awt.Color(153, 255, 204));
+        tblparking.setForeground(new java.awt.Color(51, 51, 51));
         tblparking.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "u_id ", "vehicle_type", "payment", "date", "time", "status"
+                "id ", "u_id", "vehicle_type", "payment", "date", "time", "status"
             }
         ));
         jScrollPane1.setViewportView(tblparking);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 690, 400));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 720, 420));
 
         jButton1.setText("Select");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
