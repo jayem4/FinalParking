@@ -114,6 +114,8 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         profile = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -319,6 +321,29 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         jLabel19.setText("Paying Tickets");
         Main.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 340, 170, 30));
 
+        jPanel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel2MouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 180, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        Main.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 390, 180, -1));
+
+        jLabel3.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
+        jLabel3.setText("Add Payment");
+        Main.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 504, 140, 20));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -466,6 +491,10 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_logoutMouseClicked
 
+    private void jPanel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jPanel2MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -523,7 +552,9 @@ public class EmployeeDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel logout;
     private javax.swing.JLabel profile;
     private javax.swing.JPanel users;

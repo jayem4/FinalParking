@@ -127,7 +127,7 @@ public class U_Admin extends javax.swing.JFrame {
 
         String sql = "SELECT * FROM tbl_accounts";
 
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/theater_db", "root", "");
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/parking", "root", "");
              PreparedStatement pst = con.prepareStatement(sql);
              ResultSet rs = pst.executeQuery()) 
         {
