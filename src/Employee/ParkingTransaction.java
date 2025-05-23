@@ -35,7 +35,7 @@ public class ParkingTransaction extends javax.swing.JFrame {
     String ut = "Active"; // Assuming the status is "Active" once logged in
 
     try {
-        String sql = "INSERT INTO tbl_log (u_id, u_username, login_time, u_type, log_status) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO tbl_logs (u_id, u_username, action_time log_status) VALUES (?, ?, ?, ?, ?)";
         pstmt = con.prepareStatement(sql);
 
         pstmt.setInt(1, userId);
@@ -110,7 +110,7 @@ public class ParkingTransaction extends javax.swing.JFrame {
             "\nHours: " + selectedHours +
             "\nTotal Payment: ₱" + totalPayment);
 
-        logEvent(userId, username, "Submitted a " + selectedHours + "-hour parking transaction.");
+//        logEvent(userId, username, "Submitted a " + selectedHours + "-hour parking transaction.");
 
         conn.close();
         this.dispose();

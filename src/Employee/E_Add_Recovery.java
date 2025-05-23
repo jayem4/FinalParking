@@ -288,65 +288,68 @@ public class E_Add_Recovery extends javax.swing.JFrame {
 
     private void confirmMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_confirmMouseClicked
         dbConnect dbc = new dbConnect();
-        Session sess = Session.getInstance();
-        String secQuestion = sq.getSelectedItem().toString();
-        String secAnswer = ans.getText();
-        dbConnect connector = new dbConnect();
-        int userId = 0;
-        String uname2 = null;
+Session sess = Session.getInstance();
+String secQuestion = sq.getSelectedItem().toString();
+String secAnswer = ans.getText();
+dbConnect connector = new dbConnect();
+int userId = 0;
+String uname2 = null;
 
-        if(secAnswer.isEmpty())
-        {
-            JOptionPane.showMessageDialog(null, "Please Fill All Boxes");
-        }else
-        {
-            System.out.println("1");
-            
-//            dbc.updateData("UPDATE tbl_accounts SET security_question = '" + secQuestion + "', security_answer='" + secAnswer + "' WHERE u_id = '" + sess.getUid() + "'");
-            
-            System.out.println("2");
-            System.out.println(""+sess.getUid());
-            System.out.println(""+secQuestion);
-            System.out.println(""+secAnswer);
+System.out.println("Starting security question update process...");
 
-            try 
-            {
-                String query = "UPDATE user SET security_question = ?, security_answer = ? WHERE u_id = ?";
-                PreparedStatement pstmt2 = connector.getConnection().prepareStatement(query);
-                pstmt2.setString(1, secQuestion);  // Set the value for the first parameter (security_question)
-                pstmt2.setString(2, secAnswer);    // Set the value for the second parameter (security_answer)
-                pstmt2.setInt(3, sess.getUid());   // Set the value for the third parameter (u_id)
+if(secAnswer.isEmpty()) {
+    JOptionPane.showMessageDialog(null, "Please Fill All Boxes");
+    System.out.println("Security answer field is empty.");
+} else {
+    System.out.println("Security answer provided, proceeding...");
+    System.out.println("User ID from session: " + sess.getUid());
+    System.out.println("Selected security question: " + secQuestion);
+    System.out.println("Provided security answer: " + secAnswer);
 
-                int rowsAffected = pstmt2.executeUpdate(); // Executes the update query
-                if (rowsAffected > 0) {
-                    System.out.println("Update successful.");
-                } else {
-                    System.out.println("No rows updated.");
-                }
-                
-                
-                
-                
-                
-                String query2 = "SELECT * FROM user WHERE u_id = '" + sess.getUid() + "'";
-                PreparedStatement pstmt = connector.getConnection().prepareStatement(query2);
+    try {
+        String query = "UPDATE tbl_accounts SET security_question = ?, security_answer = ? WHERE u_id = ?";
+        System.out.println("Preparing update query...");
+        PreparedStatement pstmt2 = connector.getConnection().prepareStatement(query);
+        pstmt2.setString(1, secQuestion);
+        pstmt2.setString(2, secAnswer);
+        pstmt2.setInt(3, sess.getUid());
 
-                ResultSet resultSet = pstmt.executeQuery();
-
-                if (resultSet.next()) {
-                    userId = resultSet.getInt("u_id");   // Update the outer `userId` correctly
-                    uname2 = resultSet.getString("u_user");
-                }
-            } catch (SQLException ex) {
-                System.out.println("SQL Exception: " + ex);
-            }
-
-            logEvent(userId, uname2, "User Changed Their Details");
-            
-            EmployeeDashboard ed = new EmployeeDashboard();
-            ed.setVisible(true);
-            this.dispose();
+        int rowsAffected = pstmt2.executeUpdate();
+        System.out.println("Update query executed.");
+        if (rowsAffected > 0) {
+            System.out.println("Update successful: " + rowsAffected + " row(s) affected.");
+        } else {
+            System.out.println("No rows updated. Please check if the user ID is valid.");
         }
+
+        String query2 = "SELECT * FROM tbl_accounts WHERE u_id = ?";
+        System.out.println("Fetching updated user data...");
+        PreparedStatement pstmt = connector.getConnection().prepareStatement(query2);
+        pstmt.setInt(1, sess.getUid());
+
+        ResultSet resultSet = pstmt.executeQuery();
+
+        if (resultSet.next()) {
+            userId = resultSet.getInt("u_id");
+            uname2 = resultSet.getString("u_username");
+            System.out.println("Fetched updated user info: ID = " + userId + ", Username = " + uname2);
+        } else {
+            System.out.println("No user found with ID: " + sess.getUid());
+        }
+    } catch (SQLException ex) {
+        System.out.println("SQL Exception occurred: " + ex.getMessage());
+        ex.printStackTrace();
+    }
+
+    System.out.println("Logging event...");
+    logEvent(userId, uname2, "User Changed Their Details");
+
+    System.out.println("Opening Employee Dashboard...");
+    EmployeeDashboard ed = new EmployeeDashboard();
+    ed.setVisible(true);
+    this.dispose();
+}
+
     }//GEN-LAST:event_confirmMouseClicked
 
     private void confirmMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_confirmMouseEntered
