@@ -115,6 +115,7 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         profile = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -318,7 +319,7 @@ public class EmployeeDashboard extends javax.swing.JFrame {
 
         jLabel19.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel19.setText("Paying Tickets");
+        jLabel19.setText("Parking");
         Main.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 340, 170, 30));
 
         jPanel2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -327,15 +328,23 @@ public class EmployeeDashboard extends javax.swing.JFrame {
             }
         });
 
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/userimages/icons8-jar-48.png"))); // NOI18N
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 180, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         Main.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 390, 180, -1));
@@ -369,10 +378,10 @@ public class EmployeeDashboard extends javax.swing.JFrame {
             if(rs.next())
             {
 
-                accd.Fname.setText("" +rs.getString("u_fname"));
-                accd.Lname.setText("" + rs.getString("u_lname"));
-                accd.MR_username.setText("" + rs.getString("u_username"));
-                accd.phone.setText("" + rs.getString("u_phone"));
+                accd.acc_fname.setText("" +rs.getString("u_fname"));
+                accd.acc_lname.setText("" + rs.getString("u_lname"));
+                accd.acc_uname.setText("" + rs.getString("u_username"));
+                accd.acc_phone.setText("" + rs.getString("u_phone"));
                 accd.image.setIcon(accd.ResizeImage(rs.getString("u_image"), null, accd.image));
                 accd.oldpath = rs.getString("u_image");
                 accd.path = rs.getString("u_image");
@@ -553,6 +562,7 @@ public class EmployeeDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel logout;

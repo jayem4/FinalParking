@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
@@ -31,23 +32,32 @@ public class ParkingForm extends javax.swing.JFrame {
         loadParkingTransactionsData();
     }
 
-    public void displayParkingTransactions() {
+  public void displayParkingTransactions() {
     try {
         dbConnect dbc = new dbConnect();
 
-        // Query to fetch relevant columns from 'parking_transactions' table
-        ResultSet rs = dbc.getData("SELECT id, u_id, vehicle_type, payment, " +
-                                   "CONCAT(date, ' ', time) AS datetime, status " +
-                                   "FROM parking_transactions");
+        String sql = "SELECT pt.transaction_id AS 'Transaction ID', " +
+                     "CONCAT(u.u_fname, ' ', u.u_lname) AS 'Employee Name', " +
+                     "pt.parking_area AS 'Parking Area', " +
+                     "pt.time_in AS 'Time In', pt.time_out AS 'Time Out', " +
+                     "pt.duration_hours AS 'Duration (hrs)', " +
+                     "pt.rate_per_hour AS 'Rate/Hour', " +
+                     "pt.total_fee AS 'Total Fee', " +
+                     "pt.status AS 'Status' " +
+                     "FROM parking_transactions pt " +
+                     "JOIN tbl_accounts u ON pt.u_id = u.u_id";
 
-        // Assuming your JTable is named 'tblparking'
+        ResultSet rs = dbc.getData(sql);
+
+        // Display in JTable
         tblparking.setModel(DbUtils.resultSetToTableModel(rs));
 
         rs.close();
     } catch (SQLException ex) {
-        System.out.println("Errors: " + ex.getMessage());
+        System.out.println("Error displaying parking transactions: " + ex.getMessage());
     }
 }
+
 
     DefaultTableModel model = new DefaultTableModel();
 
@@ -56,57 +66,26 @@ public void tableChanged(TableModelEvent e) {
         int row = e.getFirstRow();
         int column = e.getColumn();
 
-        if (row == -1 || column == -1) {
-            return;
-        }
+        if (row == -1 || column == -1) return;
 
-        updateParkingDatabase(row, column); // ✅ Update parking transaction instead of reports
-    }
+        String columnName = model.getColumnName(column);
+        if (!columnName.equals("Status")) return;
 
-    // Set column headers for parking_transactions table
-    String[] columnNames = {
-        "id", "u_id", "vehicle_type", "payment",
-        "date", "time", "status"
-    };
-    model.setColumnIdentifiers(columnNames);
-    model.setRowCount(0); // Clear table
-
-    String sql = "SELECT id, u_id, vehicle_type, payment, date, time, status FROM parking_transactions";
-
-    try (Connection connect = new dbConnect().getConnection();
-         PreparedStatement pst = connect.prepareStatement(sql);
-         ResultSet rs = pst.executeQuery()) {
-
-        while (rs.next()) {
-            Object[] row = {
-                rs.getInt("id"),
-                rs.getInt("u_id"),
-                rs.getString("vehicle_type"),
-                rs.getString("payment"),
-                rs.getDate("date"),
-                rs.getTime("time"),
-                rs.getString("status")
-            };
-            model.addRow(row);
-        }
-
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(null, "Database Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        updateParkingDatabase(row);
     }
 }
-private void updateParkingDatabase(int row, int column) {
-    try {
-        int transactionId = Integer.parseInt(model.getValueAt(row, 0).toString()); // Assuming ID is column 0
-        String columnName = model.getColumnName(column);
-        Object newValue = model.getValueAt(row, column);
 
-        // Use parameterized query to update the specific column
-        String sql = "UPDATE parking_transactions SET " + columnName + " = ? WHERE id = ?";
+private void updateParkingDatabase(int row) {
+    try {
+        int transactionId = Integer.parseInt(model.getValueAt(row, 0).toString());
+        String newStatus = model.getValueAt(row, 8).toString(); // 8 = "Status" column
+
+        String sql = "UPDATE parking_transactions SET status = ? WHERE transaction_id = ?";
 
         try (Connection conn = new dbConnect().getConnection();
              PreparedStatement pst = conn.prepareStatement(sql)) {
 
-            pst.setObject(1, newValue);
+            pst.setString(1, newStatus);
             pst.setInt(2, transactionId);
             pst.executeUpdate();
         }
@@ -116,31 +95,45 @@ private void updateParkingDatabase(int row, int column) {
     }
 }
 
-private void loadParkingTransactionsData() {
-    DefaultTableModel model = (DefaultTableModel) tblparking.getModel();  // Assuming 'tblblotter' is your JTable for parking transactions
-    model.setRowCount(0); // Clear the table before reloading
 
-    String sql = "SELECT id, u_id, vehicle_type, payment, date, time, status FROM parking_transactions";
 
-    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/parking", "root", "");
+public void loadParkingTransactionsData() {
+    // Set up columns
+    String[] columnNames = {
+        "Transaction ID", "Employee Name", "Parking Area", "Time In", "Time Out", 
+        "Duration (hrs)", "Rate/Hour", "Total Fee", "Status"
+    };
+    model.setColumnIdentifiers(columnNames);
+    model.setRowCount(0);
+
+    String sql = "SELECT pt.transaction_id, CONCAT(u.u_fname, ' ', u.u_lname) AS full_name, " +
+                 "pt.parking_area, pt.time_in, pt.time_out, pt.duration_hours, " +
+                 "pt.rate_per_hour, pt.total_fee, pt.status " +
+                 "FROM parking_transactions pt " +
+                 "JOIN tbl_accounts u ON pt.u_id = u.u_id";
+
+    try (Connection con = new dbConnect().getConnection();
          PreparedStatement pst = con.prepareStatement(sql);
          ResultSet rs = pst.executeQuery()) {
 
-        // Iterate through ResultSet and add rows to the table
         while (rs.next()) {
             model.addRow(new Object[] {
-                rs.getInt("id"),
-                rs.getInt("u_id"),
-                rs.getString("vehicle_type"),
-                rs.getString("payment"),
-                rs.getDate("date"),
-                rs.getTime("time"),
+                rs.getInt("transaction_id"),
+                rs.getString("full_name"),
+                rs.getString("parking_area"),
+                rs.getTimestamp("time_in"),
+                rs.getTimestamp("time_out"),
+                rs.getDouble("duration_hours"),
+                rs.getDouble("rate_per_hour"),
+                rs.getDouble("total_fee"),
                 rs.getString("status")
             });
         }
 
+        tblparking.setModel(model);
+
     } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(this, "Error loading parking transactions data: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Database Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
 
@@ -170,18 +163,18 @@ private void loadParkingTransactionsData() {
         tblparking.setForeground(new java.awt.Color(51, 51, 51));
         tblparking.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "id ", "u_id", "vehicle_type", "payment", "date", "time", "status"
+                "transaction_id", "u_id", "parking_area", "time_in", "time_out", "duration_hours", "rate_per_hour", "total_fee", "status"
             }
         ));
         jScrollPane1.setViewportView(tblparking);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 720, 420));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 920, 420));
 
         jButton1.setText("Select");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -189,7 +182,12 @@ private void loadParkingTransactionsData() {
                 jButton1MouseClicked(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, -1, -1));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
 
         jButton2.setText("Back");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -197,44 +195,59 @@ private void loadParkingTransactionsData() {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 30, -1, -1));
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 20, -1, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 720, 490));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 940, 490));
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-         int selectedRow = tblparking.getSelectedRow();
+ int selectedRow = tblparking.getSelectedRow();
 
-    if (selectedRow == -1) {
-        JOptionPane.showMessageDialog(this, "Please select a parking transaction to timeout.", "No Selection", JOptionPane.WARNING_MESSAGE);
-        return;
+if (selectedRow == -1) {
+    JOptionPane.showMessageDialog(null, "Please select a parking transaction to timeout.", "No Selection", JOptionPane.WARNING_MESSAGE);
+    return;
+}
+
+Object value = tblparking.getValueAt(selectedRow, 0);
+int transactionId;
+
+try {
+    transactionId = Integer.parseInt(value.toString());
+} catch (NumberFormatException ex) {
+    JOptionPane.showMessageDialog(null, "Invalid transaction ID format: " + value, "Error", JOptionPane.ERROR_MESSAGE);
+    return;
+}
+
+try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/parking", "root", "")) {
+    String sql = "UPDATE parking_transactions SET status = ?, time_out = NOW() WHERE transaction_id = ?";
+    PreparedStatement pst = conn.prepareStatement(sql);
+    pst.setString(1, "Timed Out");
+    pst.setInt(2, transactionId);
+
+    int affectedRows = pst.executeUpdate();
+
+    if (affectedRows > 0) {
+        JOptionPane.showMessageDialog(null, "Parking transaction timed out successfully.");
+        loadParkingTransactionsData(); // Refresh table
+
+        // Open payment form on the Swing thread
+        SwingUtilities.invokeLater(() -> {
+           PaymentForm pf = new PaymentForm(transactionId);
+        pf.setVisible(true);
+        });
+
+    } else {
+        JOptionPane.showMessageDialog(null, "Failed to update the parking transaction.", "Update Failed", JOptionPane.ERROR_MESSAGE);
     }
 
-    // Assuming 'id' is in column 0 of the table
-    int parkingId = (int) tblparking.getValueAt(selectedRow, 0);
+} catch (SQLException ex) {
+    JOptionPane.showMessageDialog(null, "Database error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+}
 
-    try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/parking", "root", "")) {
-
-        String sql = "UPDATE parking_transactions SET status = ? WHERE id = ?";
-        PreparedStatement pst = conn.prepareStatement(sql);
-        pst.setString(1, "Timed Out");  // new status
-        pst.setInt(2, parkingId);
-
-        int affectedRows = pst.executeUpdate();
-
-        if (affectedRows > 0) {
-            JOptionPane.showMessageDialog(this, "Parking transaction timed out successfully.");
-            // Refresh the table data after update
-            loadParkingTransactionsData();
-        } else {
-            JOptionPane.showMessageDialog(this, "Failed to update the parking transaction.", "Update Failed", JOptionPane.ERROR_MESSAGE);
-        }
-
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(this, "Database error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    }    // TODO add your handling code here:
+   // TODO add your handling code here:
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -242,6 +255,10 @@ private void loadParkingTransactionsData() {
         AD.setVisible(true);
         this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -285,4 +302,7 @@ private void loadParkingTransactionsData() {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblparking;
     // End of variables declaration//GEN-END:variables
+
+    
+  
 }

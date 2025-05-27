@@ -10,8 +10,12 @@ import config.dbConnect;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import javax.swing.JOptionPane;
 
@@ -57,69 +61,29 @@ public class ParkingTransaction extends javax.swing.JFrame {
         }
     }
 }
+public int getUserIdByFullName(String fullName) {
+    int userId = -1;
 
- private void handleSubmit() {
-    String vehicleType = typvehi.getSelectedItem().toString();
+    String sql = "SELECT u_id FROM users WHERE CONCAT(u_fname, ' ', u_lname) = ?";
 
-    // Get how many hours user wants to park (e.g., 1, 2, 3 from JComboBox)
-    int selectedHours = Integer.parseInt(hh.getSelectedItem().toString());
-    int ratePerHour = 50; // Set your rate here
-    int totalPayment = selectedHours * ratePerHour;
+    try (Connection conn = new dbConnect().getConnection();
+         PreparedStatement pst = conn.prepareStatement(sql)) {
 
-    // Format the date
-    String dateStr = yy.getSelectedItem().toString() + "-" +
-                     String.format("%02d", mm.getSelectedIndex() + 1) + "-" +
-                     String.format("%02d", Integer.parseInt(dd.getSelectedItem().toString()));
+        pst.setString(1, fullName);
+        ResultSet rs = pst.executeQuery();
 
-    // Format time (convert to 24-hour)
-    int hour = Integer.parseInt(hh.getSelectedItem().toString());
-    int minute = Integer.parseInt(minu.getSelectedItem().toString());
-    String amPm = pm.getSelectedItem().toString();
+        if (rs.next()) {
+            userId = rs.getInt("u_id");
+        }
 
-    if (amPm.equals("PM") && hour != 12) {
-        hour += 12;
-    } else if (amPm.equals("AM") && hour == 12) {
-        hour = 0;
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Database error: " + e.getMessage());
     }
 
-    String time24 = String.format("%02d:%02d:00", hour, minute);
-
-    try {
-        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/parking", "root", "");
-
-        // Get user info from session
-        Session sess = Session.getInstance();
-        int userId = sess.getUid();
-        String username = sess.getUname();
-
-        String sql = "INSERT INTO parking_transactions (u_id, vehicle_type, payment, date, time, status) " +
-                     "VALUES (?, ?, ?, ?, ?, ?)";
-
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setInt(1, userId);
-        stmt.setString(2, vehicleType);
-        stmt.setString(3, String.valueOf(totalPayment));
-        stmt.setDate(4, java.sql.Date.valueOf(dateStr));
-        stmt.setTime(5, java.sql.Time.valueOf(time24));
-        stmt.setString(6, "Pending");
-
-        stmt.executeUpdate();
-
-        JOptionPane.showMessageDialog(this,
-            "Parking submitted.\nVehicle: " + vehicleType +
-            "\nHours: " + selectedHours +
-            "\nTotal Payment: ₱" + totalPayment);
-
-//        logEvent(userId, username, "Submitted a " + selectedHours + "-hour parking transaction.");
-
-        conn.close();
-        this.dispose();
-
-    } catch (Exception e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-    }
+    return userId;
 }
+
+ 
 
 
 
@@ -133,25 +97,14 @@ public class ParkingTransaction extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        hh = new javax.swing.JComboBox<>();
-        minu = new javax.swing.JComboBox<>();
-        pm = new javax.swing.JComboBox<>();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        dd = new javax.swing.JComboBox<>();
-        jLabel6 = new javax.swing.JLabel();
-        mm = new javax.swing.JComboBox<>();
-        jLabel7 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        yy = new javax.swing.JComboBox<>();
-        jLabel8 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        typvehi = new javax.swing.JComboBox<>();
-        pay = new javax.swing.JTextField();
+        parkslot = new javax.swing.JComboBox<>();
+        jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        employ = new javax.swing.JTextField();
+        lblTimeIn = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -160,50 +113,6 @@ public class ParkingTransaction extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        hh.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12" }));
-        jPanel1.add(hh, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 200, 50, -1));
-
-        minu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "45", "46", "47", "48", "49", "50", " " }));
-        jPanel1.add(minu, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 200, 50, -1));
-
-        pm.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "AM", "PM" }));
-        jPanel1.add(pm, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 200, -1, -1));
-
-        jLabel9.setText("Hours");
-        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 180, 50, -1));
-
-        jLabel10.setText("Minutes");
-        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 180, -1, -1));
-
-        jLabel11.setText("Pm");
-        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 180, 30, -1));
-
-        dd.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" }));
-        jPanel1.add(dd, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, 40, -1));
-
-        jLabel6.setText("Day");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, -1, -1));
-
-        mm.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December", " " }));
-        jPanel1.add(mm, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 200, 70, -1));
-
-        jLabel7.setText("Month");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 180, -1, -1));
-
-        jButton1.setText("Confirm");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
-            }
-        });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 240, -1, -1));
-
-        yy.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2023", "2024", "2025", " " }));
-        jPanel1.add(yy, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 200, 80, -1));
-
-        jLabel8.setText("Year");
-        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 180, -1, -1));
-
         jPanel2.setBackground(new java.awt.Color(153, 255, 204));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -211,17 +120,33 @@ public class ParkingTransaction extends javax.swing.JFrame {
         jLabel3.setText("PARKING TRANSACTION");
         jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 10, 320, 40));
 
-        jLabel1.setText("Type of Vehicle :");
-        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, -1, -1));
+        jLabel1.setText("Parking slot");
+        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 90, -1, -1));
 
-        typvehi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Car", "Motorcyle", " " }));
-        jPanel2.add(typvehi, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, 150, 30));
-        jPanel2.add(pay, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 110, 160, 30));
+        parkslot.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A1", "A2", "A3", "A4", "A5", "B1", "B2", "B3", "B4", "B5", "C1", "C2", "C3", "C4", "C5", "D1", "D2", " ", " " }));
+        jPanel2.add(parkslot, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 110, 150, 30));
 
-        jLabel2.setText("Payment ");
-        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 90, -1, -1));
+        jButton1.setText("Park");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 290, -1, -1));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 510, 410));
+        jLabel2.setText("Employee Name");
+        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 90, -1, -1));
+        jPanel2.add(employ, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 110, 160, 40));
+
+        lblTimeIn.setText("Time in");
+        jPanel2.add(lblTimeIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 180, -1, -1));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 630, 410));
 
         jPanel4.setBackground(new java.awt.Color(102, 255, 204));
         jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 0, 120, 410));
@@ -233,8 +158,64 @@ public class ParkingTransaction extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-      handleSubmit();     // TODO add your handling code here:
+      // TODO add your handling code here:
     }//GEN-LAST:event_jButton1MouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+dbConnect db = new dbConnect();
+String fullName = employ.getText().trim();
+
+String[] nameParts = fullName.split(" ");
+if (nameParts.length < 2) {
+    JOptionPane.showMessageDialog(this, "Please enter full name (first and last).");
+    return;
+}
+
+String firstName = nameParts[0];
+String lastName = nameParts[1];
+
+try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/parking", "root", "")) {
+
+    // Get user ID
+    String findUserSql = "SELECT u_id FROM tbl_accounts WHERE u_fname = ? AND u_lname = ?";
+    PreparedStatement pst = conn.prepareStatement(findUserSql);
+    pst.setString(1, firstName);
+    pst.setString(2, lastName);
+
+    ResultSet rs = pst.executeQuery();
+
+    if (!rs.next()) {
+        JOptionPane.showMessageDialog(this, "User not found.");
+        return;
+    }
+
+    int userId = rs.getInt("u_id");
+
+    // Get selected parking area (e.g., "Slot A") directly from combo box
+    String parkingArea = parkslot.getSelectedItem().toString();
+
+    // Get current time
+    String timeIn = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+    // Insert into parking_transactions
+    String insertSql = "INSERT INTO parking_transactions (u_id, parking_area, time_in, status) VALUES (?, ?, ?, ?)";
+    boolean inserted = db.insertData(insertSql, userId, parkingArea, timeIn, "Active");
+
+    if (inserted) {
+        lblTimeIn.setText(timeIn);
+        JOptionPane.showMessageDialog(this, "Employee " + fullName + " parked at " + parkingArea + " at " + timeIn);
+        this.dispose();
+    } else {
+        JOptionPane.showMessageDialog(this, "Failed to save parking transaction.");
+    }
+
+} catch (SQLException e) {
+    JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage());
+}
+
+
+      // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -272,26 +253,15 @@ public class ParkingTransaction extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> dd;
-    private javax.swing.JComboBox<String> hh;
+    private javax.swing.JTextField employ;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JComboBox<String> minu;
-    private javax.swing.JComboBox<String> mm;
-    private javax.swing.JTextField pay;
-    private javax.swing.JComboBox<String> pm;
-    private javax.swing.JComboBox<String> typvehi;
-    private javax.swing.JComboBox<String> yy;
+    private javax.swing.JLabel lblTimeIn;
+    private javax.swing.JComboBox<String> parkslot;
     // End of variables declaration//GEN-END:variables
 }

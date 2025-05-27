@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 19, 2025 at 06:00 AM
+-- Generation Time: May 27, 2025 at 02:01 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -28,22 +28,23 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `parking_transactions` (
-  `id` int(11) NOT NULL,
+  `transaction_id` int(11) NOT NULL,
   `u_id` int(11) DEFAULT NULL,
-  `vehicle_type` varchar(100) DEFAULT NULL,
-  `payment` varchar(100) DEFAULT NULL,
-  `date` date DEFAULT NULL,
-  `time` time DEFAULT NULL,
-  `status` varchar(20) DEFAULT NULL
+  `parking_area` varchar(255) DEFAULT NULL,
+  `time_in` datetime DEFAULT NULL,
+  `time_out` datetime DEFAULT NULL,
+  `duration_hours` decimal(5,2) DEFAULT NULL,
+  `rate_per_hour` decimal(10,2) DEFAULT 25.00,
+  `total_fee` decimal(10,2) DEFAULT NULL,
+  `status` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `parking_transactions`
 --
 
-INSERT INTO `parking_transactions` (`id`, `u_id`, `vehicle_type`, `payment`, `date`, `time`, `status`) VALUES
-(1, 45, 'Car', '100', '2025-01-01', '17:03:00', 'Timed Out'),
-(2, 45, 'Motorcyle', '100', '2025-05-05', '02:00:00', 'Pending');
+INSERT INTO `parking_transactions` (`transaction_id`, `u_id`, `parking_area`, `time_in`, `time_out`, `duration_hours`, `rate_per_hour`, `total_fee`, `status`) VALUES
+(1, 46, 'A3', '2025-05-27 19:02:27', '2025-05-27 19:59:42', NULL, 25.00, 0.00, 'Paid');
 
 -- --------------------------------------------------------
 
@@ -86,7 +87,8 @@ INSERT INTO `tbl_accounts` (`u_id`, `u_fname`, `u_lname`, `u_username`, `u_type`
 (42, 'Yeet', 'Yeet', 'maby12', 'Employee', '73l8gRjwLftklgfdXT+MdiMEjJwGPVMsyVxe16iYpk8=', '09081618046', '', 'Active', '', ''),
 (43, 'JayEm', 'Koh Phal', 'jm123', 'Admin', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', '09123456712', '', 'Active', '', ''),
 (44, 'koh phal', 'JayEm', 'jm321', 'Employee', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', '09132123123', '', 'Active', '', ''),
-(45, 'ross', 'sabio', 'ross123', 'Admin', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', '09128312333', '', 'Active', '', '');
+(45, 'ross', 'sabio', 'ross123', 'Admin', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', '09128312333', 'src/images/EA.jpg', 'Active', '', ''),
+(46, 'rose', 'sore', 'ross21', 'Employee', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', '09123567894', '', 'Active', '', '');
 
 -- --------------------------------------------------------
 
@@ -358,7 +360,44 @@ INSERT INTO `tbl_logs` (`log_id`, `u_id`, `u_username`, `action_time`, `log_acti
 (347, 45, 'ross123', '2025-05-19 03:57:49', 'Logged as Admin'),
 (348, 45, 'ross123', '2025-05-19 03:58:10', 'Logged Out'),
 (349, 45, 'ross123', '2025-05-19 03:59:13', 'Logged as Admin'),
-(350, 45, 'ross123', '2025-05-19 03:59:34', 'Logged Out');
+(350, 45, 'ross123', '2025-05-19 03:59:34', 'Logged Out'),
+(351, 46, 'ross21', '2025-05-27 07:53:35', 'Registered for the first time'),
+(352, 46, 'ross21', '2025-05-27 07:53:55', 'Logged as Employee'),
+(353, 46, 'ross21', '2025-05-27 07:56:50', 'Logged as Employee'),
+(354, 46, 'ross21', '2025-05-27 08:27:12', 'Logged as Employee'),
+(355, 46, 'ross21', '2025-05-27 08:28:50', 'Logged as Employee'),
+(356, 46, 'ross21', '2025-05-27 08:29:54', 'Logged as Employee'),
+(357, 46, 'ross21', '2025-05-27 08:34:57', 'Logged as Employee'),
+(358, 46, 'ross21', '2025-05-27 08:36:47', 'Logged as Employee'),
+(359, 46, 'ross21', '2025-05-27 08:41:27', 'Logged as Employee'),
+(360, 46, 'ross21', '2025-05-27 08:43:01', 'Logged as Employee'),
+(361, 46, 'ross21', '2025-05-27 08:44:47', 'Logged as Employee'),
+(362, 46, 'ross21', '2025-05-27 08:46:46', 'Logged as Employee'),
+(363, 45, 'ross123', '2025-05-27 10:51:57', 'Logged as Admin'),
+(364, 45, 'ross123', '2025-05-27 10:57:25', 'Logged as Admin'),
+(365, 46, 'ross21', '2025-05-27 11:02:16', 'Logged as Employee'),
+(366, 45, 'ross123', '2025-05-27 11:02:56', 'Logged as Admin'),
+(367, 45, 'ross123', '2025-05-27 11:14:45', 'Logged as Admin'),
+(368, 45, 'ross123', '2025-05-27 11:15:32', 'Logged as Admin'),
+(369, 45, 'ross123', '2025-05-27 11:17:49', 'Logged as Admin'),
+(370, 45, 'ross123', '2025-05-27 11:21:43', 'Logged as Admin'),
+(371, 45, 'ross123', '2025-05-27 11:23:41', 'Logged as Admin'),
+(372, 45, 'ross123', '2025-05-27 11:26:13', 'Logged as Admin'),
+(373, 45, 'ross123', '2025-05-27 11:27:13', 'Logged Out'),
+(374, 45, 'ross123', '2025-05-27 11:28:44', 'Logged as Admin'),
+(375, 45, 'ross123', '2025-05-27 11:29:24', 'Logged Out'),
+(376, 45, 'ross123', '2025-05-27 11:30:11', 'Logged as Admin'),
+(377, 45, 'ross123', '2025-05-27 11:31:06', 'Logged as Admin'),
+(378, 45, 'ross123', '2025-05-27 11:43:48', 'Logged as Admin'),
+(379, 45, 'ross123', '2025-05-27 11:44:50', 'Logged as Admin'),
+(380, 45, 'ross123', '2025-05-27 11:45:32', 'Logged as Admin'),
+(381, 45, 'ross123', '2025-05-27 11:45:56', 'Logged as Admin'),
+(382, 45, 'ross123', '2025-05-27 11:47:05', 'Logged as Admin'),
+(383, 45, 'ross123', '2025-05-27 11:50:01', 'Logged as Admin'),
+(384, 45, 'ross123', '2025-05-27 11:50:53', 'Logged as Admin'),
+(385, 45, 'ross123', '2025-05-27 11:51:34', 'Logged Out'),
+(386, 45, 'ross123', '2025-05-27 11:58:10', 'Logged as Admin'),
+(387, 45, 'ross123', '2025-05-27 11:59:38', 'Logged as Admin');
 
 -- --------------------------------------------------------
 
@@ -414,7 +453,8 @@ INSERT INTO `tbl_products` (`p_id`, `p_price`, `p_quantity`, `u_id`) VALUES
 -- Indexes for table `parking_transactions`
 --
 ALTER TABLE `parking_transactions`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`transaction_id`),
+  ADD KEY `slot_id` (`parking_area`),
   ADD KEY `u_id` (`u_id`);
 
 --
@@ -451,19 +491,19 @@ ALTER TABLE `tbl_products`
 -- AUTO_INCREMENT for table `parking_transactions`
 --
 ALTER TABLE `parking_transactions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tbl_accounts`
 --
 ALTER TABLE `tbl_accounts`
-  MODIFY `u_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `u_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT for table `tbl_logs`
 --
 ALTER TABLE `tbl_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=351;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=388;
 
 --
 -- AUTO_INCREMENT for table `tbl_orders`

@@ -5,6 +5,7 @@
  */
 package Employee;
 
+import Startups.Login;
 import java.awt.Color;
 import config.Session;
 import config.dbConnect;
@@ -140,8 +141,8 @@ public class accountDetails extends javax.swing.JFrame {
     public boolean updateCheck() {
         dbConnect dbc = new dbConnect();
         Session sess = Session.getInstance();
-        String p = phone.getText().trim();
-        String us = MR_username.getText().trim();
+        String p = acc_phone.getText().trim();
+        String us = acc_uname.getText().trim();
 
         try {
             System.out.println("1");
@@ -151,13 +152,13 @@ public class accountDetails extends javax.swing.JFrame {
                 Phone = resultSet.getString("u_phone");
                 if (Phone.equals(p)) {
                     JOptionPane.showMessageDialog(null, "Phone Number is Already Used");
-                    phone.setText("");
+                    acc_phone.setText("");
                 }
 
                 usname = resultSet.getString("u_username");
                 if (usname.equals(us)) {
                     JOptionPane.showMessageDialog(null, "Username is Already Used");
-                    MR_username.setText("");
+                    acc_uname.setText("");
                 }
                 return true;
             } else {
@@ -231,16 +232,16 @@ public class accountDetails extends javax.swing.JFrame {
     private void initComponents() {
 
         Main = new javax.swing.JPanel();
-        MR_username = new javax.swing.JTextField();
+        acc_uname = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        Lname = new javax.swing.JTextField();
+        acc_lname = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        Fname = new javax.swing.JTextField();
+        acc_fname = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         confirm = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        phone = new javax.swing.JTextField();
+        acc_phone = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         image = new javax.swing.JLabel();
         Remove = new javax.swing.JPanel();
@@ -251,6 +252,8 @@ public class accountDetails extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        acc_id = new javax.swing.JLabel();
+        acc_type2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -262,13 +265,13 @@ public class accountDetails extends javax.swing.JFrame {
         Main.setBackground(new java.awt.Color(0, 102, 102));
         Main.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        MR_username.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        MR_username.addActionListener(new java.awt.event.ActionListener() {
+        acc_uname.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        acc_uname.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MR_usernameActionPerformed(evt);
+                acc_unameActionPerformed(evt);
             }
         });
-        Main.add(MR_username, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 260, 400, 30));
+        Main.add(acc_uname, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 260, 400, 30));
 
         jLabel6.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
@@ -276,13 +279,13 @@ public class accountDetails extends javax.swing.JFrame {
         jLabel6.setText("Last Name:");
         Main.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 210, 80, 30));
 
-        Lname.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        Lname.addActionListener(new java.awt.event.ActionListener() {
+        acc_lname.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        acc_lname.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                LnameActionPerformed(evt);
+                acc_lnameActionPerformed(evt);
             }
         });
-        Main.add(Lname, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 210, 400, 30));
+        Main.add(acc_lname, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 210, 400, 30));
 
         jLabel7.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
@@ -290,13 +293,13 @@ public class accountDetails extends javax.swing.JFrame {
         jLabel7.setText("  First Name:");
         Main.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 160, 90, 30));
 
-        Fname.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        Fname.addActionListener(new java.awt.event.ActionListener() {
+        acc_fname.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        acc_fname.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FnameActionPerformed(evt);
+                acc_fnameActionPerformed(evt);
             }
         });
-        Main.add(Fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 160, 400, 30));
+        Main.add(acc_fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 160, 400, 30));
 
         jLabel9.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
@@ -331,13 +334,13 @@ public class accountDetails extends javax.swing.JFrame {
         jLabel12.setText("Phone");
         Main.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 310, 80, 30));
 
-        phone.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        phone.addActionListener(new java.awt.event.ActionListener() {
+        acc_phone.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        acc_phone.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                phoneActionPerformed(evt);
+                acc_phoneActionPerformed(evt);
             }
         });
-        Main.add(phone, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 310, 400, 30));
+        Main.add(acc_phone, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 310, 400, 30));
 
         jPanel1.setLayout(null);
         jPanel1.add(image);
@@ -418,6 +421,14 @@ public class accountDetails extends javax.swing.JFrame {
         jLabel3.setText("jLabel3");
         Main.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -60, 310, 610));
 
+        acc_id.setForeground(new java.awt.Color(255, 255, 255));
+        acc_id.setText("ID");
+        Main.add(acc_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 360, -1, -1));
+
+        acc_type2.setForeground(new java.awt.Color(255, 255, 255));
+        acc_type2.setText("TYPE");
+        Main.add(acc_type2, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 360, -1, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -446,25 +457,25 @@ public class accountDetails extends javax.swing.JFrame {
         logout.setBackground(d);
     }//GEN-LAST:event_logoutMouseExited
 
-    private void MR_usernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MR_usernameActionPerformed
+    private void acc_unameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acc_unameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_MR_usernameActionPerformed
+    }//GEN-LAST:event_acc_unameActionPerformed
 
-    private void LnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LnameActionPerformed
+    private void acc_lnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acc_lnameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_LnameActionPerformed
+    }//GEN-LAST:event_acc_lnameActionPerformed
 
-    private void FnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FnameActionPerformed
+    private void acc_fnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acc_fnameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_FnameActionPerformed
+    }//GEN-LAST:event_acc_fnameActionPerformed
 
     private void confirmMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_confirmMouseClicked
         dbConnect dbc = new dbConnect();
         Session sess = Session.getInstance();
-        String fn = Fname.getText().trim();
-        String ln = Lname.getText().trim();
-        String p = phone.getText().trim();
-        String uname = MR_username.getText().trim();
+        String fn = acc_fname.getText().trim();
+        String ln = acc_lname.getText().trim();
+        String p = acc_phone.getText().trim();
+        String uname = acc_uname.getText().trim();
         dbConnect connector = new dbConnect();
         int userId = 0;
         String uname2 = null;
@@ -535,12 +546,12 @@ public class accountDetails extends javax.swing.JFrame {
         confirm.setBackground(d);
     }//GEN-LAST:event_confirmMouseExited
 
-    private void phoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phoneActionPerformed
+    private void acc_phoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acc_phoneActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_phoneActionPerformed
+    }//GEN-LAST:event_acc_phoneActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-        /*Session sess = Session.getInstance();
+        Session sess = Session.getInstance();
         if(sess.getUid() == 0)
         {
         JOptionPane.showMessageDialog(null,"No Account, Login FIrst");
@@ -552,10 +563,10 @@ public class accountDetails extends javax.swing.JFrame {
         acc_fname.setText("" + sess.getFname());
         acc_lname.setText("" + sess.getLname());
         acc_uname.setText("" + sess.getUname());
-        acc_type.setText("" + sess.getType());
+        acc_id.setText("" + sess.getType());
         acc_phone.setText("" + sess.getPhone());
         acc_id.setText("" + sess.getUid());
-        }*/
+        } 
     }//GEN-LAST:event_formWindowActivated
 
     private void RemoveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RemoveMouseClicked
@@ -644,12 +655,15 @@ public class accountDetails extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    public javax.swing.JTextField Fname;
-    public javax.swing.JTextField Lname;
-    public javax.swing.JTextField MR_username;
     private javax.swing.JPanel Main;
     public javax.swing.JPanel Remove;
     public javax.swing.JPanel Select;
+    public javax.swing.JTextField acc_fname;
+    private javax.swing.JLabel acc_id;
+    public javax.swing.JTextField acc_lname;
+    public javax.swing.JTextField acc_phone;
+    private javax.swing.JLabel acc_type2;
+    public javax.swing.JTextField acc_uname;
     private javax.swing.JPanel confirm;
     public javax.swing.JLabel image;
     private javax.swing.JLabel jLabel1;
@@ -664,6 +678,5 @@ public class accountDetails extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel logout;
-    public javax.swing.JTextField phone;
     // End of variables declaration//GEN-END:variables
 }

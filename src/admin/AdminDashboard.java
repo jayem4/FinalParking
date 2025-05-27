@@ -13,10 +13,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Date;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+
+
 public class AdminDashboard extends javax.swing.JFrame {
 
     private Color H;
@@ -25,6 +30,7 @@ public class AdminDashboard extends javax.swing.JFrame {
     Color d = new Color(240,240,240);
     public AdminDashboard() {
         initComponents();
+        loadUserProfile();
     }
     
     
@@ -60,6 +66,75 @@ public class AdminDashboard extends javax.swing.JFrame {
             }
         }
     }
+    
+    private void loadLogs() {
+    dbConnect connector = new dbConnect();
+    try (Connection con = connector.getConnection()) {
+
+        // If you have statuses, and want to update something, adjust the query accordingly
+        // For example, if you have a status column and want to update from 'Pending' to 'Active'
+        // But your columns don't show status, so skip or update as needed
+
+        // Fetch logs - change column names to match your table
+        String selectQuery = "SELECT l.log_id, l.u_username, l.action_time, " +
+                             "l.log_action, u.u_username AS user_exists " +
+                             "FROM tbl_logs l LEFT JOIN tbl_accounts u ON l.u_username = u.u_username " +
+                             "ORDER BY l.action_time DESC";
+
+        try (Statement stmt = con.createStatement();
+             ResultSet rs = stmt.executeQuery(selectQuery)) {
+
+            DefaultTableModel model = new DefaultTableModel(
+                new String[]{"Log ID", "Username", "Action Time", "Log Action", "User Status"}, 0
+            );
+
+            while (rs.next()) {
+                String userStatus = (rs.getString("user_exists") == null) ? "Invalid User" : "Valid User";
+
+                model.addRow(new Object[]{
+                    rs.getInt("log_id"),
+                    rs.getString("u_username"),
+                    rs.getTimestamp("action_time"),
+                    rs.getString("log_action"),
+                    userStatus
+                });
+            }
+
+            logstbl.setModel(model);
+        }
+
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(null, "Error loading logs: " + ex.getMessage());
+    }
+}
+    
+    private void loadUserProfile() {
+    dbConnect dbc = new dbConnect();
+    Session sess = Session.getInstance();
+
+    String query = "SELECT u_image FROM tbl_accounts WHERE u_id = ?";
+
+    try (Connection conn = dbc.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+        pstmt.setInt(1, sess.getUid());
+        ResultSet rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            String imagePath = rs.getString("u_image");
+
+            if (imagePath != null && !imagePath.isEmpty()) {
+                ImageIcon icon = new ImageIcon(imagePath);
+                u_image.setIcon(icon);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace(); // Log the error
+        JOptionPane.showMessageDialog(this, "Error loading profile image: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}   
+
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -82,7 +157,8 @@ public class AdminDashboard extends javax.swing.JFrame {
         acc_type = new javax.swing.JLabel();
         acc_phone = new javax.swing.JLabel();
         acc_id = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        u_image = new javax.swing.JLabel();
         users1 = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
         users = new javax.swing.JPanel();
@@ -94,6 +170,9 @@ public class AdminDashboard extends javax.swing.JFrame {
         jLabel17 = new javax.swing.JLabel();
         users5 = new javax.swing.JPanel();
         jLabel19 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        logstbl = new javax.swing.JTable();
+        jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -115,9 +194,9 @@ public class AdminDashboard extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Admin Dashboard");
-        Header.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-240, 30, 1310, 40));
+        Header.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-20, 30, 1210, 40));
 
-        Main.add(Header, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 100));
+        Main.add(Header, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1200, 100));
 
         Navigation.setBackground(new java.awt.Color(153, 255, 204));
         Navigation.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -147,19 +226,19 @@ public class AdminDashboard extends javax.swing.JFrame {
         acc_fname.setForeground(new java.awt.Color(255, 255, 255));
         acc_fname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         acc_fname.setText("First Name");
-        Navigation.add(acc_fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 300, 30));
+        Navigation.add(acc_fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 200, 300, 30));
 
         acc_lname.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         acc_lname.setForeground(new java.awt.Color(255, 255, 255));
         acc_lname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         acc_lname.setText("Last Name");
-        Navigation.add(acc_lname, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 130, 300, 30));
+        Navigation.add(acc_lname, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, 300, 30));
 
         acc_uname.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         acc_uname.setForeground(new java.awt.Color(255, 255, 255));
         acc_uname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         acc_uname.setText("User Name");
-        Navigation.add(acc_uname, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 190, 300, 30));
+        Navigation.add(acc_uname, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 240, 300, 30));
 
         acc_type.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         acc_type.setForeground(new java.awt.Color(255, 255, 255));
@@ -171,14 +250,18 @@ public class AdminDashboard extends javax.swing.JFrame {
         acc_phone.setForeground(new java.awt.Color(255, 255, 255));
         acc_phone.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         acc_phone.setText("Phone");
-        Navigation.add(acc_phone, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 340, 300, 30));
+        Navigation.add(acc_phone, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 290, 300, 30));
 
         acc_id.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         acc_id.setForeground(new java.awt.Color(255, 255, 255));
         acc_id.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         acc_id.setText("ID");
-        Navigation.add(acc_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 20, 300, 30));
-        Navigation.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, -90, 310, 160));
+        Navigation.add(acc_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 180, 300, 30));
+
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel1.add(u_image, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 0, 200, 170));
+
+        Navigation.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 220, 170));
 
         Main.add(Navigation, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 100, 300, 540));
 
@@ -199,9 +282,9 @@ public class AdminDashboard extends javax.swing.JFrame {
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel14.setText("Change Pass");
         users1.add(jLabel14);
-        jLabel14.setBounds(0, 25, 160, 22);
+        jLabel14.setBounds(0, 10, 160, 30);
 
-        Main.add(users1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 330, 160, 70));
+        Main.add(users1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 230, 160, 50));
 
         users.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -220,9 +303,9 @@ public class AdminDashboard extends javax.swing.JFrame {
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setText("Users");
         users.add(jLabel12);
-        jLabel12.setBounds(0, 25, 160, 20);
+        jLabel12.setBounds(0, 10, 160, 30);
 
-        Main.add(users, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 110, 160, 70));
+        Main.add(users, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 110, 160, 50));
 
         users2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -239,11 +322,11 @@ public class AdminDashboard extends javax.swing.JFrame {
 
         jLabel15.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel15.setText("Logs");
+        jLabel15.setText("PaymentForm");
         users2.add(jLabel15);
-        jLabel15.setBounds(0, 25, 160, 22);
+        jLabel15.setBounds(0, 7, 160, 30);
 
-        Main.add(users2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 430, 160, 70));
+        Main.add(users2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 290, 160, 50));
 
         users3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -270,7 +353,7 @@ public class AdminDashboard extends javax.swing.JFrame {
         users3.add(jLabel17);
         jLabel17.setBounds(0, 40, 160, 22);
 
-        Main.add(users3, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 530, 160, 70));
+        Main.add(users3, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 350, 160, 70));
 
         users5.setBackground(new java.awt.Color(255, 255, 255));
         users5.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -292,15 +375,40 @@ public class AdminDashboard extends javax.swing.JFrame {
         jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel19.setText("ViewParking");
         users5.add(jLabel19);
-        jLabel19.setBounds(0, 10, 160, 50);
+        jLabel19.setBounds(0, 10, 160, 30);
 
-        Main.add(users5, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 220, 160, 70));
+        Main.add(users5, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 170, 160, 50));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\Gwapo ko\\Downloads\\ChatGPT Image May 20, 2025, 09_54_59 PM.png")); // NOI18N
-        jLabel2.setText("jLabel2");
-        Main.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 90, 640, 580));
+        logstbl.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "log_id", "u_id", "u_username", "action_time", "log_action"
+            }
+        ));
+        jScrollPane1.setViewportView(logstbl);
 
-        getContentPane().add(Main, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 640));
+        Main.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 180, 650, -1));
+
+        jPanel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel2MouseClicked(evt);
+            }
+        });
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("ADMIN DETAILS");
+        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 160, 20));
+
+        Main.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 430, 160, 60));
+
+        getContentPane().add(Main, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1200, 640));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -370,6 +478,8 @@ public class AdminDashboard extends javax.swing.JFrame {
            acc_phone.setText("" + sess.getPhone());
            acc_id.setText("" + sess.getUid());
        }
+       
+       loadLogs();
     }//GEN-LAST:event_formWindowActivated
 
     private void users1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_users1MouseClicked
@@ -387,9 +497,7 @@ public class AdminDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_users1MouseExited
 
     private void users2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_users2MouseClicked
-        Logs_Admin la = new Logs_Admin();
-        la.setVisible(true);
-        this.dispose();
+      
     }//GEN-LAST:event_users2MouseClicked
 
     private void users2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_users2MouseEntered
@@ -427,6 +535,12 @@ public class AdminDashboard extends javax.swing.JFrame {
     private void users5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_users5MouseExited
         users5.setBackground(d);
     }//GEN-LAST:event_users5MouseExited
+
+    private void jPanel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseClicked
+           AdminDetails ad = new AdminDetails();
+        ad.setVisible(true);
+        this.dispose();  // TODO add your handling code here:
+    }//GEN-LAST:event_jPanel2MouseClicked
 
     /**
      * @param args the command line arguments
@@ -477,14 +591,18 @@ public class AdminDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel logout;
+    private javax.swing.JTable logstbl;
+    private javax.swing.JLabel u_image;
     private javax.swing.JPanel users;
     private javax.swing.JPanel users1;
     private javax.swing.JPanel users2;
