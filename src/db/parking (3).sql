@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 28, 2025 at 07:48 AM
+-- Generation Time: May 28, 2025 at 10:33 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -36,15 +36,19 @@ CREATE TABLE `parking_transactions` (
   `duration_hours` decimal(5,2) DEFAULT NULL,
   `rate_per_hour` decimal(10,2) DEFAULT 25.00,
   `total_fee` decimal(10,2) DEFAULT NULL,
-  `status` varchar(50) DEFAULT NULL
+  `status` varchar(50) DEFAULT NULL,
+  `teller_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `parking_transactions`
 --
 
-INSERT INTO `parking_transactions` (`transaction_id`, `u_id`, `parking_area`, `time_in`, `time_out`, `duration_hours`, `rate_per_hour`, `total_fee`, `status`) VALUES
-(1, 46, 'A3', '2025-05-27 19:02:27', '2025-05-27 19:59:42', NULL, 25.00, 0.00, 'Paid');
+INSERT INTO `parking_transactions` (`transaction_id`, `u_id`, `parking_area`, `time_in`, `time_out`, `duration_hours`, `rate_per_hour`, `total_fee`, `status`, `teller_id`) VALUES
+(1, 46, 'A3', '2025-05-27 19:02:27', '2025-05-27 19:59:42', NULL, 25.00, 0.00, 'Paid', NULL),
+(2, 47, 'C4', '2025-05-28 14:25:26', '2025-05-28 16:07:34', NULL, 25.00, 25.00, 'Paid', 50),
+(3, 49, 'A2', '2025-05-28 15:58:57', '2025-05-28 15:59:15', NULL, 25.00, 0.00, 'Paid', 50),
+(4, 49, 'D2', '2025-05-28 16:15:57', NULL, NULL, 25.00, NULL, 'Active', NULL);
 
 -- --------------------------------------------------------
 
@@ -88,7 +92,11 @@ INSERT INTO `tbl_accounts` (`u_id`, `u_fname`, `u_lname`, `u_username`, `u_type`
 (43, 'JayEm', 'Koh Phal', 'jm123', 'Admin', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', '09123456712', '', 'Active', '', ''),
 (44, 'koh phal', 'JayEm', 'jm321', 'Employee', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', '09132123123', '', 'Active', '', ''),
 (45, 'ross', 'sabio', 'ross123', 'Admin', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', '09128312333', 'src/images/EA.jpg', 'Active', '', ''),
-(46, 'rose', 'sore', 'ross21', 'Employee', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', '09123567894', '', 'Active', '', '');
+(46, 'rose', 'sore', 'ross21', 'Employee', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', '09123567894', '', 'Active', '', ''),
+(47, 'carl', 'rosalita', 'carl1', 'Employee', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', '094456732123', '', 'Active', '', ''),
+(48, 'sada', 'asdas', 'sad123', 'Employee', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', '09123456789', '', 'Active', 'What\'s the name of your first pet?', 'blue'),
+(49, 'dasdas', 'asdasd', 'das123', 'Employee', 'DR6kwlbNUKKnzL/SKz2ZWfb9ML2EC5/zx8Ze5OId8G0=', '09123456782', '', 'Active', 'What\'s the name of your first pet?', 'Fkd2iMDgBpnGz6RJejYS1+g8UyBitkslD+2JCBKO1Ug='),
+(50, 'cyril', 'ress', 'cyril123', 'Teller', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', '09123455789', '', 'Active', 'What\'s your favorite food?', '3kM+1VChYkp0J5qjDDa1LyhEJmEMAUtwAi5MiJ68qHU=');
 
 -- --------------------------------------------------------
 
@@ -397,7 +405,33 @@ INSERT INTO `tbl_logs` (`log_id`, `u_id`, `u_username`, `action_time`, `log_acti
 (384, 45, 'ross123', '2025-05-27 11:50:53', 'Logged as Admin'),
 (385, 45, 'ross123', '2025-05-27 11:51:34', 'Logged Out'),
 (386, 45, 'ross123', '2025-05-27 11:58:10', 'Logged as Admin'),
-(387, 45, 'ross123', '2025-05-27 11:59:38', 'Logged as Admin');
+(387, 45, 'ross123', '2025-05-27 11:59:38', 'Logged as Admin'),
+(388, 47, 'carl1', '2025-05-28 06:24:14', 'Registered for the first time'),
+(389, 47, 'carl1', '2025-05-28 06:24:52', 'Logged as Employee'),
+(390, 45, 'ross123', '2025-05-28 06:25:45', 'Logged as Admin'),
+(391, 48, 'sad123', '2025-05-28 06:39:41', 'Registered for the first time'),
+(392, 49, 'das123', '2025-05-28 06:42:05', 'Registered for the first time'),
+(393, 49, 'das123', '2025-05-28 06:47:22', 'User Reset Their Password'),
+(394, 45, 'ross123', '2025-05-28 07:23:56', 'Logged as Admin'),
+(395, 45, 'ross123', '2025-05-28 07:28:04', 'Logged as Admin'),
+(396, 45, 'ross123', '2025-05-28 07:37:44', 'Logged as Admin'),
+(397, 45, 'ross123', '2025-05-28 07:37:51', 'Logged Out'),
+(398, 45, 'ross123', '2025-05-28 07:39:15', 'Logged as Admin'),
+(399, 45, 'ross123', '2025-05-28 07:39:20', 'Logged Out'),
+(400, 50, 'cyril123', '2025-05-28 07:58:04', 'Registered for the first time'),
+(401, 50, 'cyril123', '2025-05-28 07:58:24', 'Logged as Teller'),
+(402, 50, 'cyril123', '2025-05-28 07:58:35', 'Logged Out'),
+(403, 49, 'das123', '2025-05-28 07:58:44', 'Logged as Employee'),
+(404, 50, 'cyril123', '2025-05-28 07:59:11', 'Logged as Teller'),
+(405, 50, 'cyril123', '2025-05-28 07:59:46', 'Logged Out'),
+(406, 50, 'cyril123', '2025-05-28 08:02:12', 'Logged as Teller'),
+(407, 50, 'cyril123', '2025-05-28 08:02:22', 'Logged Out'),
+(408, 50, 'cyril123', '2025-05-28 08:03:00', 'Logged as Teller'),
+(409, 50, 'cyril123', '2025-05-28 08:07:27', 'Logged as Teller'),
+(410, 50, 'cyril123', '2025-05-28 08:07:55', 'Logged Out'),
+(411, 49, 'das123', '2025-05-28 08:15:34', 'Logged as Employee'),
+(412, 45, 'ross123', '2025-05-28 08:32:21', 'Logged as Admin'),
+(413, 45, 'ross123', '2025-05-28 08:32:30', 'Logged Out');
 
 -- --------------------------------------------------------
 
@@ -445,6 +479,19 @@ CREATE TABLE `tbl_products` (
 INSERT INTO `tbl_products` (`p_id`, `p_price`, `p_quantity`, `u_id`) VALUES
 (1, 50.00, 13, 1);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `teller_reports`
+--
+
+CREATE TABLE `teller_reports` (
+  `report_id` int(11) NOT NULL,
+  `teller_id` int(11) DEFAULT NULL,
+  `total_collected` decimal(10,2) DEFAULT NULL,
+  `report_date` date DEFAULT curdate()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Indexes for dumped tables
 --
@@ -484,6 +531,13 @@ ALTER TABLE `tbl_products`
   ADD PRIMARY KEY (`p_id`);
 
 --
+-- Indexes for table `teller_reports`
+--
+ALTER TABLE `teller_reports`
+  ADD PRIMARY KEY (`report_id`),
+  ADD KEY `teller_id` (`teller_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -491,19 +545,19 @@ ALTER TABLE `tbl_products`
 -- AUTO_INCREMENT for table `parking_transactions`
 --
 ALTER TABLE `parking_transactions`
-  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tbl_accounts`
 --
 ALTER TABLE `tbl_accounts`
-  MODIFY `u_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `u_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `tbl_logs`
 --
 ALTER TABLE `tbl_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=388;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=414;
 
 --
 -- AUTO_INCREMENT for table `tbl_orders`
@@ -516,6 +570,12 @@ ALTER TABLE `tbl_orders`
 --
 ALTER TABLE `tbl_products`
   MODIFY `p_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `teller_reports`
+--
+ALTER TABLE `teller_reports`
+  MODIFY `report_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
