@@ -56,7 +56,7 @@ public class ForgetPass extends javax.swing.JFrame {
 
     try {
         PreparedStatement stmt = con.prepareStatement(
-            "SELECT security_question, security_answer FROM tbl_users WHERE u_username = ?"
+            "SELECT security_question, security_answer FROM tbl_accounts WHERE u_username = ?"
         );
         stmt.setString(1, username);
         ResultSet rs = stmt.executeQuery();
@@ -174,7 +174,7 @@ public class ForgetPass extends javax.swing.JFrame {
         try {
             // Update password in the database
             PreparedStatement stmt = con.prepareStatement(
-                "UPDATE tbl_users SET u_password = ? WHERE u_username = ?"
+                "UPDATE tbl_accounts SET u_password = ? WHERE u_username = ?"
             );
             stmt.setString(1, hashedPassword);
             stmt.setString(2, un.getText());
@@ -185,7 +185,7 @@ public class ForgetPass extends javax.swing.JFrame {
 
                 // Try to log the password reset
                 try {
-                    String query2 = "SELECT * FROM tbl_users WHERE u_username = ?";
+                    String query2 = "SELECT * FROM tbl_accounts WHERE u_username = ?";
                     PreparedStatement pstmt = connector.getConnection().prepareStatement(query2);
                     pstmt.setString(1, un.getText());
 
@@ -235,8 +235,6 @@ public class ForgetPass extends javax.swing.JFrame {
         ans = new javax.swing.JTextField();
         un = new javax.swing.JTextField();
         acc_id1 = new javax.swing.JLabel();
-        confirm1 = new javax.swing.JPanel();
-        jLabel12 = new javax.swing.JLabel();
         acc_id2 = new javax.swing.JLabel();
         Newpass = new javax.swing.JPasswordField();
         Cpass = new javax.swing.JPasswordField();
@@ -246,6 +244,7 @@ public class ForgetPass extends javax.swing.JFrame {
         logout = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -288,27 +287,6 @@ public class ForgetPass extends javax.swing.JFrame {
         acc_id1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         acc_id1.setText("Username:");
         Main.add(acc_id1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 110, -1, 30));
-
-        confirm1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                confirm1MouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                confirm1MouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                confirm1MouseExited(evt);
-            }
-        });
-        confirm1.setLayout(null);
-
-        jLabel12.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel12.setText("Search");
-        confirm1.add(jLabel12);
-        jLabel12.setBounds(0, 10, 90, 10);
-
-        Main.add(confirm1, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 110, 90, 30));
 
         acc_id2.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         acc_id2.setForeground(new java.awt.Color(255, 255, 255));
@@ -379,7 +357,15 @@ public class ForgetPass extends javax.swing.JFrame {
         Main.add(logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, 40));
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/bg_gihapon.jpg"))); // NOI18N
-        Main.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 0, 480, 580));
+        Main.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 580));
+
+        jButton1.setText("Search");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
+        Main.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 110, -1, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -425,62 +411,6 @@ public class ForgetPass extends javax.swing.JFrame {
     
     }//GEN-LAST:event_formWindowActivated
 
-    private void confirm1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_confirm1MouseClicked
-         String username = un.getText();  
-    if (username.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Please enter your username.");
-        return;
-    }
-
-    // Create a database connection
-    dbConnect db = new dbConnect();  // Instantiate dbConnector
-    Connection con = db.getConnection(); // Get connection
-
-    if (con == null) {
-        JOptionPane.showMessageDialog(this, "Database connection failed. Please try again later.");
-        return;
-    }
-
-    try {
-        PreparedStatement stmt = con.prepareStatement(
-            "SELECT security_question, security_answer FROM tbl_users WHERE u_username = ?"
-        );
-        stmt.setString(1, username);
-        ResultSet rs = stmt.executeQuery();
-
-        if (rs.next()) {
-            sq.removeAllItems();
-            sq.addItem(rs.getString("security_question"));
-            sq.setEnabled(true);
-          correctAnswer = rs.getString("security_answer"); // still okay if hashed
-
-            Submit.setEnabled(true);
-        } else {
-            JOptionPane.showMessageDialog(this, "Username not found.");
-        }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, "An error occurred while fetching the security question.");
-    } finally {
-        try {
-            if (con != null) {
-                con.close(); // Close the connection after use
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }  
-    }//GEN-LAST:event_confirm1MouseClicked
-
-    private void confirm1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_confirm1MouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_confirm1MouseEntered
-
-    private void confirm1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_confirm1MouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_confirm1MouseExited
-
     private void NewpassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewpassActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_NewpassActionPerformed
@@ -508,6 +438,57 @@ public class ForgetPass extends javax.swing.JFrame {
             Cpass.setEchoChar('*');
         }
     }//GEN-LAST:event_check1ActionPerformed
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+      String username = un.getText();  
+    if (username.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter your username.");
+        return;
+    }
+
+    // Create a database connection
+    dbConnect db = new dbConnect();  // Instantiate dbConnector
+    Connection con = db.getConnection(); // Get connection
+
+    if (con == null) {
+        JOptionPane.showMessageDialog(this, "Database connection failed. Please try again later.");
+        return;
+    }
+
+    try {
+        PreparedStatement stmt = con.prepareStatement(
+            "SELECT security_question, security_answer FROM tbl_accounts WHERE u_username = ?"
+        );
+        stmt.setString(1, username);
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            sq.removeAllItems();
+            sq.addItem(rs.getString("security_question"));
+            sq.setEnabled(true);
+          correctAnswer = rs.getString("security_answer"); // still okay if hashed
+
+            Submit.setEnabled(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Username not found.");
+        }
+        
+        fetchSecurityQuestion();
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "An error occurred while fetching the security question.");
+    } finally {
+        try {
+            if (con != null) {
+                con.close(); // Close the connection after use
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        // TODO add your handling code here:
+    }          // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -570,9 +551,8 @@ public class ForgetPass extends javax.swing.JFrame {
     private javax.swing.JTextField ans;
     private javax.swing.JCheckBox check;
     private javax.swing.JCheckBox check1;
-    private javax.swing.JPanel confirm1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel logout;
     private javax.swing.JComboBox<String> sq;

@@ -137,6 +137,8 @@ public class Registration extends javax.swing.JFrame {
         check1 = new javax.swing.JCheckBox();
         jLabel2 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
+        sq = new javax.swing.JComboBox<>();
+        ans = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -159,7 +161,7 @@ public class Registration extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(153, 255, 255));
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("Confirm Password:");
-        New_Manager.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 290, 190, 30));
+        New_Manager.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 290, 190, 30));
 
         MR_username.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         MR_username.addActionListener(new java.awt.event.ActionListener() {
@@ -261,7 +263,7 @@ public class Registration extends javax.swing.JFrame {
         cancel.add(jLabel10);
         jLabel10.setBounds(0, 10, 130, 20);
 
-        New_Manager.add(cancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 410, 130, 40));
+        New_Manager.add(cancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 500, 130, 40));
 
         confirm.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -280,9 +282,9 @@ public class Registration extends javax.swing.JFrame {
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel11.setText("Confirm");
         confirm.add(jLabel11);
-        jLabel11.setBounds(0, 10, 130, 22);
+        jLabel11.setBounds(0, 10, 130, 30);
 
-        New_Manager.add(confirm, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 360, 130, 40));
+        New_Manager.add(confirm, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 500, 130, 40));
 
         check.setBackground(new java.awt.Color(102, 102, 102));
         check.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
@@ -315,6 +317,10 @@ public class Registration extends javax.swing.JFrame {
         jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/BG_GANI.jpg"))); // NOI18N
         jLabel12.setText("jLabel12");
         New_Manager.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 310, 560));
+
+        sq.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "What's the name of your first pet?", "What's the lastname of your Mother?", "What's your favorite food?", "What's your favorite Color?", "What's your birth month?" }));
+        New_Manager.add(sq, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 370, 290, -1));
+        New_Manager.add(ans, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 400, 350, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -372,100 +378,90 @@ public class Registration extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelMouseExited
 
     private void confirmMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_confirmMouseClicked
-    dbConnect dbc = new dbConnect();
-    Session sess = Session.getInstance();
-    dbConnect connector = new dbConnect();
-    String fn = Fname.getText().trim();
-    String ln = Lname.getText().trim();
-    String uname = MR_username.getText().trim();
-    String passw = new String(MR_password.getPassword()).trim();
-    String Cpass = new String(MR_passwordConfirm.getPassword()).trim();
-    String p = PhoneNum.getText().trim();
-    String at = type.getSelectedItem().toString().trim();
-    Timestamp time = new Timestamp(new java.util.Date().getTime());
-    int userId = 0;
-    String im = "";
-    String sq = "";
-    String sa = "";
+ dbConnect dbc = new dbConnect();
+Session sess = Session.getInstance();
+dbConnect connector = new dbConnect();
 
-    
+String fn = Fname.getText().trim();
+String ln = Lname.getText().trim();
+String uname = MR_username.getText().trim();
+String passw = new String(MR_password.getPassword()).trim();
+String Cpass = new String(MR_passwordConfirm.getPassword()).trim();
+String p = PhoneNum.getText().trim();
+String at = type.getSelectedItem().toString().trim();
+String securityQuestion = sq.getSelectedItem().toString().trim();
+String im = "";
+Timestamp time = new Timestamp(new java.util.Date().getTime());
+int userId = 0;
 
+if (uname.isEmpty() || passw.isEmpty() || Cpass.isEmpty() || ln.isEmpty() || fn.isEmpty()) {
+    JOptionPane.showMessageDialog(null, "Please Fill All Boxes");
 
+} else if (!passw.equals(Cpass)) {
+    JOptionPane.showMessageDialog(null, "Password Does Not Match");
 
-        if(uname.isEmpty() || passw.isEmpty() || Cpass.isEmpty() || ln.isEmpty() || fn.isEmpty())
-        {
-            JOptionPane.showMessageDialog(null, "Please Fill All Boxes");
+} else if (!p.matches("\\d+")) {
+    JOptionPane.showMessageDialog(null, "Phone Must Only Contain Numbers");
 
-        }else if(!passw.equals(Cpass))
-        {
-            JOptionPane.showMessageDialog(null, "Password Does Not Match");
-            //System.out.println("Password ["+password+"] Length: "+password.length());
-            //System.out.println("Confirm Password ["+Cpassword+"] Length: "+Cpassword.length());
-        }else if(!p.matches("\\d+"))
-        {
-            JOptionPane.showMessageDialog(null, "Phone Must Only Contain Numbers");
-        }else if(passw.length() <= 7)
-        {
-            JOptionPane.showMessageDialog(null, "Password Must be Exactly 8 Characters Long");
-        }else if(!p.matches("\\d{11,15}"))
-        {
-            JOptionPane.showMessageDialog(null, "Invalid Phone num");
-        }else if(duplicateCheck())
-        {
-            System.out.println("Duplicate Exists");
-        }else
-        {
-            try
-            {
-//                String query = "SELECT * FROM tbl_accounts WHERE u_id='" + sess.getUid() + "'";
-//                System.out.println(""+ sess.getUid() );
-//                ResultSet rs = dbc.getData(query);
-//                if (rs.next()) 
-//                {
-                
-                    String pass = passwordHasher.hashPassword(passw); // Datatype vairiable = classname.voidName(ToBEConvertedVariable)
-                    
+} else if (passw.length() <= 7) {
+    JOptionPane.showMessageDialog(null, "Password Must be Exactly 8 Characters Long");
 
-                    if(dbc.insertData("INSERT INTO tbl_accounts (u_fname     ,u_lname      , u_username     , u_type  , u_password    , u_phone  , u_image  , u_status, security_question, security_answer) "
-                                                      + "VALUES ('" + fn + "', '" + ln + "', '" + uname + "', '"+at+"', '" + pass + "', '" + p + "', '" + im + "',   'Pending',  '" + sq + "',  '" + sa + "')")) //Changed Phone into Varchar due to aql data limits
-                    {
-                        
-                        
-                        
-                        try 
-                        {
-                            String query = "SELECT u_id FROM tbl_accounts WHERE u_username = '" + uname + "'";
-                            PreparedStatement pstmt = connector.getConnection().prepareStatement(query);
+} else if (!p.matches("\\d{11,15}")) {
+    JOptionPane.showMessageDialog(null, "Invalid Phone Number");
 
-                            ResultSet resultSet = pstmt.executeQuery();
+} else if (securityQuestion.isEmpty() || ans.getText().trim().isEmpty()) {
+    JOptionPane.showMessageDialog(null, "Security Question and Answer must be filled out");
 
-                            if (resultSet.next()) 
-                            {
-                                userId = resultSet.getInt("u_id");   // Update the outer `userId` correctly
-                            }
-                        } catch (SQLException ex) 
-                        {
-                            System.out.println("SQL Exception: " + ex);
-                        }
-                        
-                        logEvent(userId, uname, "Registered for the first time");
-                        
-                        
-                        
-                        
-                        
-                        JOptionPane.showMessageDialog(null, "Registered succesfully!");
-                        Login l = new Login();
-                        l.setVisible(true);
-                        this.dispose();
-                    }
-//                }
-// There was no need to use string query
-            }catch(NoSuchAlgorithmException ex)
-            {
-                System.out.println(""+ ex);
+} else if (duplicateCheck()) {
+    System.out.println("Duplicate Exists");
+
+} else {
+    try {
+        String pass = passwordHasher.hashPassword(passw);
+        String sa = passwordHasher.hashPassword(ans.getText().trim());  // 🔐 Hash security answer
+
+        String sql = "INSERT INTO tbl_accounts (u_fname, u_lname, u_username, u_type, u_password, u_phone, u_image, u_status, security_question, security_answer) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending', ?, ?)";
+
+        PreparedStatement pstmt = dbc.getConnection().prepareStatement(sql);
+        pstmt.setString(1, fn);
+        pstmt.setString(2, ln);
+        pstmt.setString(3, uname);
+        pstmt.setString(4, at);
+        pstmt.setString(5, pass);
+        pstmt.setString(6, p);
+        pstmt.setString(7, im);
+        pstmt.setString(8, securityQuestion);
+        pstmt.setString(9, sa);
+
+        int result = pstmt.executeUpdate();
+        if (result > 0) {
+            try {
+                String query = "SELECT u_id FROM tbl_accounts WHERE u_username = ?";
+                PreparedStatement getUser = connector.getConnection().prepareStatement(query);
+                getUser.setString(1, uname);
+                ResultSet resultSet = getUser.executeQuery();
+
+                if (resultSet.next()) {
+                    userId = resultSet.getInt("u_id");
+                }
+            } catch (SQLException ex) {
+                System.out.println("SQL Exception: " + ex);
             }
+
+            logEvent(userId, uname, "Registered for the first time");
+
+            JOptionPane.showMessageDialog(null, "Registered successfully!");
+            Login l = new Login();
+            l.setVisible(true);
+            this.dispose();
         }
+    } catch (NoSuchAlgorithmException | SQLException ex) {
+        System.out.println("Database error: " + ex);
+    }
+}
+
+                  
     }//GEN-LAST:event_confirmMouseClicked
 
     private void confirmMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_confirmMouseEntered
@@ -558,6 +554,7 @@ public class Registration extends javax.swing.JFrame {
     private javax.swing.JTextField MR_username;
     private javax.swing.JPanel New_Manager;
     private javax.swing.JTextField PhoneNum;
+    private javax.swing.JTextField ans;
     private javax.swing.JPanel cancel;
     private javax.swing.JCheckBox check;
     private javax.swing.JCheckBox check1;
@@ -573,6 +570,7 @@ public class Registration extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JComboBox<String> sq;
     private javax.swing.JComboBox<String> type;
     // End of variables declaration//GEN-END:variables
 }
