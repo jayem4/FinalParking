@@ -105,6 +105,10 @@ public int getUserIdByFullName(String fullName) {
         jLabel2 = new javax.swing.JLabel();
         employ = new javax.swing.JTextField();
         lblTimeIn = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        area = new javax.swing.JTextArea();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -137,7 +141,7 @@ public int getUserIdByFullName(String fullName) {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 290, -1, -1));
+        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 360, -1, -1));
 
         jLabel2.setText("Employee Name");
         jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 90, -1, -1));
@@ -146,12 +150,39 @@ public int getUserIdByFullName(String fullName) {
         lblTimeIn.setText("Time in");
         jPanel2.add(lblTimeIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 180, -1, -1));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 630, 410));
+        area.setColumns(20);
+        area.setFont(new java.awt.Font("Monospaced", 1, 13)); // NOI18N
+        area.setRows(5);
+        jScrollPane2.setViewportView(area);
+
+        jPanel2.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 30, 260, 300));
+
+        jButton5.setBackground(new java.awt.Color(255, 255, 255));
+        jButton5.setText("Reset");
+        jButton5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 340, 80, 40));
+
+        jButton6.setBackground(new java.awt.Color(255, 255, 255));
+        jButton6.setText("Print Receipt");
+        jButton6.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 340, 110, 40));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 410));
 
         jPanel4.setBackground(new java.awt.Color(102, 255, 204));
-        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 0, 120, 410));
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 0, 0, 410));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 630, 410));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 410));
 
         pack();
         setLocationRelativeTo(null);
@@ -200,14 +231,26 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/
     // Insert into parking_transactions
     String insertSql = "INSERT INTO parking_transactions (u_id, parking_area, time_in, status) VALUES (?, ?, ?, ?)";
     boolean inserted = db.insertData(insertSql, userId, parkingArea, timeIn, "Active");
+ 
+   if (inserted) {
+    lblTimeIn.setText(timeIn);
+    JOptionPane.showMessageDialog(this, "Employee " + fullName + " parked at " + parkingArea + " at " + timeIn);
+    this.dispose();
 
-    if (inserted) {
-        lblTimeIn.setText(timeIn);
-        JOptionPane.showMessageDialog(this, "Employee " + fullName + " parked at " + parkingArea + " at " + timeIn);
-        this.dispose();
-    } else {
-        JOptionPane.showMessageDialog(this, "Failed to save parking transaction.");
-    }
+    area.setText("");  // Clear previous text
+    area.append("*********************************************\n");
+    area.append("*            Parking Ticket Receipt          *\n");
+    area.append("*********************************************\n\n");
+    area.append("Date                : " + new Date().toString() + "\n");
+    area.append("Employee Name       : " + fullName + "\n");
+    area.append("Parking Area        : " + parkingArea + "\n");
+    area.append("Time In             : " + timeIn + "\n");
+    area.append("\n*********************************************\n");
+    area.append("       Thank you for using our service!      \n");
+    area.append("*********************************************\n");
+} else {
+    JOptionPane.showMessageDialog(this, "Failed to save parking transaction.");
+}
 
 } catch (SQLException e) {
     JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage());
@@ -216,6 +259,19 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/
 
       // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // area.setText("");
+        //username.setText("");
+        //loanamount.setText("");
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        try{
+            area.print();
+        }catch(Exception e){
+        }
+    }//GEN-LAST:event_jButton6ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -253,14 +309,18 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public javax.swing.JTextArea area;
     private javax.swing.JTextField employ;
     private javax.swing.JButton jButton1;
+    public javax.swing.JButton jButton5;
+    public javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblTimeIn;
     private javax.swing.JComboBox<String> parkslot;
     // End of variables declaration//GEN-END:variables

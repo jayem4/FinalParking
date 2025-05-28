@@ -234,43 +234,44 @@ private String fee;
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-      double totalFee = Double.parseDouble(lblTotalFee.getText());
+double totalFee = Double.parseDouble(lblTotalFee.getText());
+int tellerId = Session.getInstance().getUid(); // Get logged-in user's ID
 
 try (Connection conn = new dbConnect().getConnection()) {
-    String sql = "UPDATE parking_transactions SET total_fee = ?, status = ? WHERE transaction_id = ?";
+    String sql = "UPDATE parking_transactions SET total_fee = ?, status = ?, teller_id = ? WHERE transaction_id = ?";
     PreparedStatement pst = conn.prepareStatement(sql);
     pst.setDouble(1, totalFee);
     pst.setString(2, "Paid");
-    pst.setInt(3, transactionId);
+    pst.setInt(3, tellerId);       // Set teller ID
+    pst.setInt(4, transactionId);  // transactionId must be initialized beforehand
 
     int updated = pst.executeUpdate();
 
     if (updated > 0) {
         JOptionPane.showMessageDialog(this, "Payment completed successfully.");
 
-        // ⚠️ Make sure all these variables are properly assigned!
-        String employeeName = lblEmployeeName.getText();     // e.g., from a JLabel
-       int userId = Session.getInstance().getUid(); // Make sure your Session class has this method
-        String parkingArea = lblParkingArea.getText();       // or from DB
-        String durationhour = lblDuration.getText();         // make sure it's calculated
-        String timein = lblTimeIn.getText();
-        String timeout = lblTimeOut.getText();
+        // Gather receipt details
+        String employeeName = lblEmployeeName.getText();
+        String parkingArea = lblParkingArea.getText();
+        String durationHour = lblDuration.getText();
+        String timeIn = lblTimeIn.getText();
+        String timeOut = lblTimeOut.getText();
         String rate = lblRate.getText();
-        String fee = lblTotalFee.getText();                  // already known
+        String fee = lblTotalFee.getText();
 
-        // ✅ Build the receipt
+        // Build receipt
         StringBuilder receipt = new StringBuilder();
         receipt.append("*********************************************\n");
         receipt.append("*             Parking Ticket Receipt        *\n");
         receipt.append("*********************************************\n\n");
-        receipt.append("Date & Time         : ").append(new java.util.Date().toString()).append("\n");
+        receipt.append("Date & Time         : ").append(new java.util.Date()).append("\n");
         receipt.append("Transaction ID      : ").append(transactionId).append("\n");
-        receipt.append("Employee Name       : ").append(employeeName).append(" (User ID: ").append(userId).append(")\n");
+        receipt.append("Employee Name       : ").append(employeeName).append(" (User ID: ").append(tellerId).append(")\n");
         receipt.append("Parking Area        : ").append(parkingArea).append("\n");
         receipt.append("---------------------------------------------\n");
-        receipt.append("Duration (Hours)    : ").append(durationhour).append("\n");
-        receipt.append("Time In             : ").append(timein).append("\n");
-        receipt.append("Time Out            : ").append(timeout).append("\n");
+        receipt.append("Duration (Hours)    : ").append(durationHour).append("\n");
+        receipt.append("Time In             : ").append(timeIn).append("\n");
+        receipt.append("Time Out            : ").append(timeOut).append("\n");
         receipt.append("Rate per Hour       : ").append(rate).append("\n");
         receipt.append("Total Fee           : ").append(fee).append("\n");
         receipt.append("Status              : Paid\n");
@@ -278,10 +279,10 @@ try (Connection conn = new dbConnect().getConnection()) {
         receipt.append("        Thank you for using our service!     \n");
         receipt.append("*********************************************\n");
 
-        // ✅ Set text to area
+        // Show receipt in the text area
         area.setText(receipt.toString());
 
-        // Optional: ask before closing
+        // Ask if user wants to close receipt window
         int confirm = JOptionPane.showConfirmDialog(this, "Do you want to close this receipt?", "Close Receipt", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             this.dispose();
@@ -294,6 +295,8 @@ try (Connection conn = new dbConnect().getConnection()) {
 } catch (SQLException ex) {
     JOptionPane.showMessageDialog(this, "Database error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 }
+
+
 
   // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed

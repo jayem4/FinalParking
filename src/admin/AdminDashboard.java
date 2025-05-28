@@ -171,6 +171,8 @@ public class AdminDashboard extends javax.swing.JFrame {
         logstbl = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -378,6 +380,19 @@ public class AdminDashboard extends javax.swing.JFrame {
 
         Main.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 350, 160, 60));
 
+        jPanel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel3MouseClicked(evt);
+            }
+        });
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel3.setText("Teller Collected Fee");
+        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 16, 160, 30));
+
+        Main.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 420, 160, 60));
+
         getContentPane().add(Main, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1200, 640));
 
         pack();
@@ -513,6 +528,27 @@ if (!sess.getType().equalsIgnoreCase("Admin")) {
         this.dispose();  // TODO add your handling code here:
     }//GEN-LAST:event_jPanel2MouseClicked
 
+    private void jPanel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseClicked
+     int tellerId = Session.getInstance().getUid();
+
+try (Connection conn = new dbConnect().getConnection()) {
+    String sql = "SELECT SUM(total_fee) AS total_collected FROM parking_transactions WHERE teller_id = ? AND status = 'Paid'";
+    PreparedStatement pst = conn.prepareStatement(sql);
+    pst.setInt(1, tellerId);
+
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+        double totalCollected = rs.getDouble("total_collected");
+        JOptionPane.showMessageDialog(null, "Total Fees Collected by You: ₱" + totalCollected);
+    } else {
+        JOptionPane.showMessageDialog(null, "No payments recorded for this teller.");
+    }
+} catch (SQLException ex) {
+    JOptionPane.showMessageDialog(null, "Database error: " + ex.getMessage());
+}
+      // TODO add your handling code here:
+    }//GEN-LAST:event_jPanel3MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -566,8 +602,10 @@ if (!sess.getType().equalsIgnoreCase("Admin")) {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel logout;
     private javax.swing.JTable logstbl;

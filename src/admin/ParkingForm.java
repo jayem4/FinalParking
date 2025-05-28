@@ -207,28 +207,39 @@ public void loadParkingTransactionsData() {
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
  // Check if current user is a Teller
 Session sess = Session.getInstance();
-if (!sess.getType().equalsIgnoreCase("Teller")) {
-    JOptionPane.showMessageDialog(null, "Only Teller accounts are allowed to perform this action.", "Access Denied", JOptionPane.WARNING_MESSAGE);
+if (!"Teller".equalsIgnoreCase(sess.getType())) {
+    JOptionPane.showMessageDialog(null, 
+        "Only Teller accounts are allowed to perform this action.", 
+        "Access Denied", 
+        JOptionPane.WARNING_MESSAGE);
     return;
 }
 
+// Check if a row is selected in the table
 int selectedRow = tblparking.getSelectedRow();
-
 if (selectedRow == -1) {
-    JOptionPane.showMessageDialog(null, "Please select a parking transaction to timeout.", "No Selection", JOptionPane.WARNING_MESSAGE);
+    JOptionPane.showMessageDialog(null, 
+        "Please select a parking transaction to timeout.", 
+        "No Selection", 
+        JOptionPane.WARNING_MESSAGE);
     return;
 }
 
+// Get transaction ID from selected row (assumed to be in column 0)
 Object value = tblparking.getValueAt(selectedRow, 0);
 int transactionId;
 
 try {
     transactionId = Integer.parseInt(value.toString());
 } catch (NumberFormatException ex) {
-    JOptionPane.showMessageDialog(null, "Invalid transaction ID format: " + value, "Error", JOptionPane.ERROR_MESSAGE);
+    JOptionPane.showMessageDialog(null, 
+        "Invalid transaction ID format: " + value, 
+        "Error", 
+        JOptionPane.ERROR_MESSAGE);
     return;
 }
 
+// Update parking transaction status and time_out
 try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/parking", "root", "")) {
     String sql = "UPDATE parking_transactions SET status = ?, time_out = NOW() WHERE transaction_id = ?";
     PreparedStatement pst = conn.prepareStatement(sql);
@@ -239,21 +250,28 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/
 
     if (affectedRows > 0) {
         JOptionPane.showMessageDialog(null, "Parking transaction timed out successfully.");
-        loadParkingTransactionsData(); // Refresh table
+        loadParkingTransactionsData(); // Refresh table data
 
-        // Open payment form
+        // Open payment form on the EDT
         SwingUtilities.invokeLater(() -> {
             PaymentForm pf = new PaymentForm(transactionId);
             pf.setVisible(true);
         });
 
     } else {
-        JOptionPane.showMessageDialog(null, "Failed to update the parking transaction.", "Update Failed", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, 
+            "Failed to update the parking transaction.", 
+            "Update Failed", 
+            JOptionPane.ERROR_MESSAGE);
     }
 
 } catch (SQLException ex) {
-    JOptionPane.showMessageDialog(null, "Database error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    JOptionPane.showMessageDialog(null, 
+        "Database error: " + ex.getMessage(), 
+        "Error", 
+        JOptionPane.ERROR_MESSAGE);
 }
+
 
    // TODO add your handling code here:
     }//GEN-LAST:event_jButton1MouseClicked
