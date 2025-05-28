@@ -5,6 +5,7 @@
  */
 package Employee;
 
+import admin.AdminDetails;
 import config.Session;
 import config.dbConnect;
 import java.sql.Connection;
@@ -109,6 +110,7 @@ public int getUserIdByFullName(String fullName) {
         area = new javax.swing.JTextArea();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -177,6 +179,14 @@ public int getUserIdByFullName(String fullName) {
         });
         jPanel2.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 340, 110, 40));
 
+        jButton2.setText("Cancel");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 360, 70, -1));
+
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 410));
 
         jPanel4.setBackground(new java.awt.Color(102, 255, 204));
@@ -235,7 +245,7 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/
    if (inserted) {
     lblTimeIn.setText(timeIn);
     JOptionPane.showMessageDialog(this, "Employee " + fullName + " parked at " + parkingArea + " at " + timeIn);
-    this.dispose();
+    
 
     area.setText("");  // Clear previous text
     area.append("*********************************************\n");
@@ -272,6 +282,12 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/
         }catch(Exception e){
         }
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    EmployeeDashboard ad = new EmployeeDashboard();
+        ad.setVisible(true);
+        this.dispose();         // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -312,6 +328,7 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/
     public javax.swing.JTextArea area;
     private javax.swing.JTextField employ;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     public javax.swing.JButton jButton5;
     public javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
