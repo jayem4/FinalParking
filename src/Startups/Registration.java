@@ -230,7 +230,7 @@ public class Registration extends javax.swing.JFrame {
         });
         New_Manager.add(PhoneNum, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 320, 360, 30));
 
-        type.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Employee", "Admin" }));
+        type.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Employee", "Admin", "Teller", " " }));
         type.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 typeActionPerformed(evt);

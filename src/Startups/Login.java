@@ -300,73 +300,72 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_usernameMLActionPerformed
 
     private void confirmMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_confirmMouseClicked
+Session sess = Session.getInstance();
+dbConnect connector = new dbConnect();
+String uname = usernameML.getText().trim();
+String pass = new String(passwordML.getPassword()).trim();
+int userId = sess.getUid();  // Initialize userId from the session
+String ac = null;
 
-        Session sess = Session.getInstance();
-        dbConnect connector = new dbConnect();
-        String uname = usernameML.getText().trim();
-        String pass = new String(passwordML.getPassword()).trim();
-        int userId = sess.getUid();  // Initialize userId from the session
-        String ac = null;
+if (pass.isEmpty() || uname.isEmpty()) {
+    JOptionPane.showMessageDialog(null, "Please fill all boxes");
+} else if (logAcc(uname, pass)) {
 
-        if (pass.isEmpty() || uname.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please fill all boxes");
-        } else if (logAcc(uname, pass)) {
+    if (!status.equals("Active")) {
+        JOptionPane.showMessageDialog(null, "Inactive account. Contact the Admin");
+        logEvent(userId, uname, "Failed - Inactive Account");
+    } else {
 
-            if (!status.equals("Active")) {
-                JOptionPane.showMessageDialog(null, "Inactive account. Contact the Admin");
-                
-                logEvent(userId, uname, "Failed - Inactive Account");
+        // Retrieve the user ID properly
+        try {
+            String query = "SELECT u_id FROM tbl_accounts WHERE u_username = ?";
+            PreparedStatement pstmt = connector.getConnection().prepareStatement(query);
+            pstmt.setString(1, uname);
+            ResultSet resultSet = pstmt.executeQuery();
 
-            } else {
-
-                // Retrieve the user ID properly
-                try 
-                {
-                    String query = "SELECT u_id FROM tbl_accounts WHERE u_username = '"+uname+"'";
-                    PreparedStatement pstmt = connector.getConnection().prepareStatement(query);
-
-                    ResultSet resultSet = pstmt.executeQuery();
-
-                    if (resultSet.next()) 
-                    {
-                        userId = resultSet.getInt("u_id");   // Update the outer `userId` correctly
-                    }
-                } catch (SQLException ex) {
-                    System.out.println("SQL Exception: " + ex);
-                }
-
-                // Handle different user types
-                if (type.equals("Admin")) {
-                    
-                    logEvent(userId, uname, "Logged as Admin");
-                    JOptionPane.showMessageDialog(null, "Login Successfully");
-
-                    AdminDashboard ad = new AdminDashboard();
-                    ad.setVisible(true);
-                    this.dispose();
-                } else if (type.equals("Employee")) 
-                {
-                    
-                    logEvent(userId, uname, "Logged as Employee");
-                    JOptionPane.showMessageDialog(null, "Login Successfully");
-
-                    EmployeeDashboard ed = new EmployeeDashboard();
-                    ed.setVisible(true);
-                    this.dispose();
-                } else if(type.equals("Deleted"))
-                {
-                    JOptionPane.showMessageDialog(null, "Invalid account");
-                }else {
-                    JOptionPane.showMessageDialog(null, "Unknown account type. Contact the Admin");
-                }
+            if (resultSet.next()) {
+                userId = resultSet.getInt("u_id");
+                sess.setUid(userId); // Store in session
             }
-
-        } else 
-        {
-            /*            JOptionPane.showMessageDialog(null, "Invalid account");*/
-            System.out.println("Unknown Error Occured");
+        } catch (SQLException ex) {
+            System.out.println("SQL Exception: " + ex);
         }
-    
+
+        // Handle different user types
+        if (type.equals("Admin")) {
+            logEvent(userId, uname, "Logged as Admin");
+            JOptionPane.showMessageDialog(null, "Login Successfully");
+
+            AdminDashboard ad = new AdminDashboard();
+            ad.setVisible(true);
+            this.dispose();
+
+        } else if (type.equals("Employee")) {
+            logEvent(userId, uname, "Logged as Employee");
+            JOptionPane.showMessageDialog(null, "Login Successfully");
+
+            EmployeeDashboard ed = new EmployeeDashboard();
+            ed.setVisible(true);
+            this.dispose();
+
+        } else if (type.equals("Teller")) {
+            logEvent(userId, uname, "Logged as Teller");
+            JOptionPane.showMessageDialog(null, "Login Successfully");
+
+            AdminDashboard ad = new AdminDashboard(); // ✅ make sure this class exists
+            ad.setVisible(true);
+            this.dispose();
+
+        } else if (type.equals("Deleted")) {
+            JOptionPane.showMessageDialog(null, "Invalid account");
+        } else {
+            JOptionPane.showMessageDialog(null, "Unknown account type. Contact the Admin");
+        }
+    }
+
+} else {
+    System.out.println("Unknown Error Occurred");
+}
 
     }//GEN-LAST:event_confirmMouseClicked
 

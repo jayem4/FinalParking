@@ -165,9 +165,6 @@ public class AdminDashboard extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         users2 = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
-        users3 = new javax.swing.JPanel();
-        jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
         users5 = new javax.swing.JPanel();
         jLabel19 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -328,33 +325,6 @@ public class AdminDashboard extends javax.swing.JFrame {
 
         Main.add(users2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 290, 160, 50));
 
-        users3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                users3MouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                users3MouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                users3MouseExited(evt);
-            }
-        });
-        users3.setLayout(null);
-
-        jLabel16.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel16.setText("Add Password");
-        users3.add(jLabel16);
-        jLabel16.setBounds(0, 10, 160, 22);
-
-        jLabel17.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel17.setText("Recovery");
-        users3.add(jLabel17);
-        jLabel17.setBounds(0, 40, 160, 22);
-
-        Main.add(users3, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 350, 160, 70));
-
         users5.setBackground(new java.awt.Color(255, 255, 255));
         users5.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -406,7 +376,7 @@ public class AdminDashboard extends javax.swing.JFrame {
         jLabel2.setText("ADMIN DETAILS");
         jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 160, 20));
 
-        Main.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 430, 160, 60));
+        Main.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 350, 160, 60));
 
         getContentPane().add(Main, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1200, 640));
 
@@ -448,9 +418,17 @@ public class AdminDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_logoutMouseExited
 
     private void usersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usersMouseClicked
-        U_Admin ua = new U_Admin();
-        ua.setVisible(true);
-        this.dispose();
+       Session sess = Session.getInstance();
+
+if (!sess.getType().equalsIgnoreCase("Admin")) {
+    JOptionPane.showMessageDialog(null, "Access Denied. Only Admins can access this section.", "Unauthorized", JOptionPane.WARNING_MESSAGE);
+    return;
+}
+
+U_Admin ua = new U_Admin();
+ua.setVisible(true);
+this.dispose();
+
     }//GEN-LAST:event_usersMouseClicked
 
     private void usersMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usersMouseEntered
@@ -483,6 +461,13 @@ public class AdminDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowActivated
 
     private void users1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_users1MouseClicked
+   Session sess = Session.getInstance();
+
+if (!sess.getType().equalsIgnoreCase("Admin")) {
+    JOptionPane.showMessageDialog(null, "Access Denied. Only Admins can access this section.", "Unauthorized", JOptionPane.WARNING_MESSAGE);
+    return;
+}
+        
     Admin_ChangePass acp = new Admin_ChangePass();
     acp.setVisible(true);
     this.dispose();
@@ -507,20 +492,6 @@ public class AdminDashboard extends javax.swing.JFrame {
     private void users2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_users2MouseExited
         users2.setBackground(d);
     }//GEN-LAST:event_users2MouseExited
-
-    private void users3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_users3MouseClicked
-    A_Add_Recovery aar = new A_Add_Recovery();
-    aar.setVisible(true);
-    this.dispose();
-    }//GEN-LAST:event_users3MouseClicked
-
-    private void users3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_users3MouseEntered
-        users3.setBackground(h);
-    }//GEN-LAST:event_users3MouseEntered
-
-    private void users3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_users3MouseExited
-        users3.setBackground(d);
-    }//GEN-LAST:event_users3MouseExited
 
     private void users5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_users5MouseClicked
         ParkingForm PF = new ParkingForm();
@@ -593,8 +564,6 @@ public class AdminDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
@@ -606,7 +575,6 @@ public class AdminDashboard extends javax.swing.JFrame {
     private javax.swing.JPanel users;
     private javax.swing.JPanel users1;
     private javax.swing.JPanel users2;
-    private javax.swing.JPanel users3;
     private javax.swing.JPanel users5;
     // End of variables declaration//GEN-END:variables
 }

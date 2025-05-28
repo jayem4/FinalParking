@@ -5,6 +5,7 @@
  */
 package admin;
 
+import config.Session;
 import config.dbConnect;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -204,7 +205,14 @@ public void loadParkingTransactionsData() {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
- int selectedRow = tblparking.getSelectedRow();
+ // Check if current user is a Teller
+Session sess = Session.getInstance();
+if (!sess.getType().equalsIgnoreCase("Teller")) {
+    JOptionPane.showMessageDialog(null, "Only Teller accounts are allowed to perform this action.", "Access Denied", JOptionPane.WARNING_MESSAGE);
+    return;
+}
+
+int selectedRow = tblparking.getSelectedRow();
 
 if (selectedRow == -1) {
     JOptionPane.showMessageDialog(null, "Please select a parking transaction to timeout.", "No Selection", JOptionPane.WARNING_MESSAGE);
@@ -233,10 +241,10 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/
         JOptionPane.showMessageDialog(null, "Parking transaction timed out successfully.");
         loadParkingTransactionsData(); // Refresh table
 
-        // Open payment form on the Swing thread
+        // Open payment form
         SwingUtilities.invokeLater(() -> {
-           PaymentForm pf = new PaymentForm(transactionId);
-        pf.setVisible(true);
+            PaymentForm pf = new PaymentForm(transactionId);
+            pf.setVisible(true);
         });
 
     } else {

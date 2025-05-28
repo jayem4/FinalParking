@@ -6,6 +6,7 @@
 package admin;
 
 import admin.PaymentForm;
+import config.Session;
 import config.dbConnect;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -61,7 +62,7 @@ private String fee;
         if (rs.next()) {
             lblTransactionId.setText(String.valueOf(rs.getInt("transaction_id")));
             lblEmployeeName.setText(rs.getString("u_fname") + " " + rs.getString("u_lname"));
-            lblSlotId.setText(rs.getString("parking_area"));  // Assuming this column exists
+            lblParkingArea.setText(rs.getString("parking_area"));  // Assuming this column exists
 
             java.sql.Timestamp timeIn = rs.getTimestamp("time_in");
             java.sql.Timestamp timeOut = rs.getTimestamp("time_out");
@@ -110,7 +111,7 @@ private String fee;
         jLabel2 = new javax.swing.JLabel();
         lblEmployeeName = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        lblSlotId = new javax.swing.JTextField();
+        lblParkingArea = new javax.swing.JTextField();
         lblTimeIn = new javax.swing.JLabel();
         lblTimeOut = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -124,6 +125,7 @@ private String fee;
         area = new javax.swing.JTextArea();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -147,7 +149,7 @@ private String fee;
 
         jLabel3.setText("Slot ID");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 140, -1, -1));
-        jPanel1.add(lblSlotId, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 160, 130, 30));
+        jPanel1.add(lblParkingArea, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 160, 130, 30));
 
         lblTimeIn.setText("Time In");
         jPanel1.add(lblTimeIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 140, -1, -1));
@@ -209,6 +211,14 @@ private String fee;
         });
         jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 370, 110, 40));
 
+        jButton2.setText("Cancel");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 410, -1, -1));
+
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 780, 500));
 
         pack();
@@ -238,30 +248,40 @@ try (Connection conn = new dbConnect().getConnection()) {
     if (updated > 0) {
         JOptionPane.showMessageDialog(this, "Payment completed successfully.");
 
-        // Build the receipt first
+        // ⚠️ Make sure all these variables are properly assigned!
+        String employeeName = lblEmployeeName.getText();     // e.g., from a JLabel
+       int userId = Session.getInstance().getUid(); // Make sure your Session class has this method
+        String parkingArea = lblParkingArea.getText();       // or from DB
+        String durationhour = lblDuration.getText();         // make sure it's calculated
+        String timein = lblTimeIn.getText();
+        String timeout = lblTimeOut.getText();
+        String rate = lblRate.getText();
+        String fee = lblTotalFee.getText();                  // already known
+
+        // ✅ Build the receipt
         StringBuilder receipt = new StringBuilder();
         receipt.append("*********************************************\n");
         receipt.append("*             Parking Ticket Receipt        *\n");
         receipt.append("*********************************************\n\n");
-        receipt.append("Date & Time         : " + new Date().toString() + "\n");
-        receipt.append("Transaction ID      : " + transactionId + "\n");
-        receipt.append("Employee Name       : " + employeeName + " (User ID: " + userId + ")\n");
-        receipt.append("Parking Area        : " + parkingArea + "\n");
+        receipt.append("Date & Time         : ").append(new java.util.Date().toString()).append("\n");
+        receipt.append("Transaction ID      : ").append(transactionId).append("\n");
+        receipt.append("Employee Name       : ").append(employeeName).append(" (User ID: ").append(userId).append(")\n");
+        receipt.append("Parking Area        : ").append(parkingArea).append("\n");
         receipt.append("---------------------------------------------\n");
-        receipt.append("Duration (Hours)    : " + durationhour + "\n");
-        receipt.append("Time In             : " + timein + "\n");
-        receipt.append("Time Out            : " + timeout + "\n");
-        receipt.append("Rate per Hour       : " + rate + "\n");
-        receipt.append("Total Fee           : " + fee + "\n");
+        receipt.append("Duration (Hours)    : ").append(durationhour).append("\n");
+        receipt.append("Time In             : ").append(timein).append("\n");
+        receipt.append("Time Out            : ").append(timeout).append("\n");
+        receipt.append("Rate per Hour       : ").append(rate).append("\n");
+        receipt.append("Total Fee           : ").append(fee).append("\n");
         receipt.append("Status              : Paid\n");
         receipt.append("---------------------------------------------\n");
         receipt.append("        Thank you for using our service!     \n");
         receipt.append("*********************************************\n");
 
-        // Display the receipt in the text area
+        // ✅ Set text to area
         area.setText(receipt.toString());
 
-        // ✅ Optional: Add a confirmation button before disposing
+        // Optional: ask before closing
         int confirm = JOptionPane.showConfirmDialog(this, "Do you want to close this receipt?", "Close Receipt", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             this.dispose();
@@ -274,6 +294,7 @@ try (Connection conn = new dbConnect().getConnection()) {
 } catch (SQLException ex) {
     JOptionPane.showMessageDialog(this, "Database error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 }
+
   // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -289,6 +310,13 @@ try (Connection conn = new dbConnect().getConnection()) {
         }catch(Exception e){
         }
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+                                       
+        AdminDashboard ua = new AdminDashboard();
+        ua.setVisible(true);
+        this.dispose();        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2MouseClicked
 
     /**
      * @param args the command line arguments
@@ -328,6 +356,7 @@ try (Connection conn = new dbConnect().getConnection()) {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JTextArea area;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     public javax.swing.JButton jButton5;
     public javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
@@ -340,8 +369,8 @@ try (Connection conn = new dbConnect().getConnection()) {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField lblDuration;
     private javax.swing.JTextField lblEmployeeName;
+    private javax.swing.JTextField lblParkingArea;
     private javax.swing.JTextField lblRate;
-    private javax.swing.JTextField lblSlotId;
     private javax.swing.JLabel lblTimeIn;
     private javax.swing.JLabel lblTimeOut;
     private javax.swing.JLabel lblTotalFee;
